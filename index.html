@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRIAXIS ／ VO2MAX × 睡眠 × 腸活 リサーチハブ</title>
+<meta name="description" content="VO2MAX向上・睡眠・腸活の3軸を、球体メニューからジャンル別に辿る個人リサーチハブ。意志力ではなく、仕組みで変える。">
+<meta property="og:title" content="TRIAXIS ／ VO2MAX × 睡眠 × 腸活 リサーチハブ">
+<meta property="og:description" content="球体メニューから3つの軸と、その交差点にある研究へ潜る。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#02050c; --line:rgba(255,255,255,.10);
+  --txt:#e8f4ff; --dim:#8aa6bf; --dim2:#5b7790;
+  --vo2:#ff7a29; --slp:#a78bfa; --gut:#34d399; --xs:#f5c542; --cy:#22d3ee;
+  --mono:"Space Mono","SFMono-Regular",Consolas,monospace;
+  --sans:"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic UI","Noto Sans JP",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);line-height:1.75;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+::selection{background:var(--cy);color:#02050c}
+
+/* ============ HERO / 3D MENU ============ */
+#hero{position:relative;height:100svh;min-height:600px;width:100%}
+#c3d{position:absolute;inset:0;touch-action:manipulation;z-index:0}
+#hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(2,5,12,.6) 0%,rgba(2,5,12,0) 26%,rgba(2,5,12,0) 62%,var(--bg) 100%)}
+
+#heroUI{position:absolute;inset:0;z-index:2;pointer-events:none;
+  padding:clamp(74px,10vh,120px) clamp(20px,5vw,72px) 0}
+#intro{transition:opacity .5s ease,transform .6s cubic-bezier(.16,1,.3,1)}
+#intro.away{opacity:0;transform:translateY(-18px)}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:var(--dim2)}
+h1.big{font-family:"Bebas Neue",var(--sans);font-size:clamp(48px,10vw,132px);line-height:.92;
+  letter-spacing:.02em;margin:12px 0 4px;
+  background:linear-gradient(100deg,var(--vo2) 0%,var(--slp) 42%,var(--gut) 78%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{margin-top:16px;max-width:520px;font-size:13.5px;color:var(--dim);line-height:1.95}
+.hint{margin-top:20px;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--cy)}
+.hint b{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--cy);
+  box-shadow:0 0 10px var(--cy);margin-right:8px;vertical-align:middle;
+  animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+
+#crumb{position:absolute;left:clamp(20px,5vw,72px);top:clamp(74px,10vh,120px);z-index:4;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  opacity:0;transform:translateY(-10px);pointer-events:none;transition:.45s cubic-bezier(.16,1,.3,1)}
+#crumb.on{opacity:1;transform:translateY(0);pointer-events:auto}
+#back{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;padding:8px 14px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--dim);cursor:pointer;transition:.22s}
+#back:hover{color:var(--txt);border-color:rgba(255,255,255,.35)}
+#path{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--dim2)}
+#path b{color:var(--txt);font-weight:700}
+
+#jump{position:absolute;left:50%;bottom:clamp(28px,7vh,64px);transform:translate(-50%,20px);z-index:4;
+  opacity:0;pointer-events:none;transition:.45s cubic-bezier(.16,1,.3,1);
+  display:flex;align-items:center;gap:12px;padding:12px 20px;border-radius:999px;
+  background:rgba(10,20,34,.6);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--line);cursor:pointer;white-space:nowrap}
+#jump.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#jump .jt{font-size:13px;font-weight:700}
+#jump .jc{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--dim2)}
+#jump .ja{font-family:var(--mono);font-size:14px}
+
+.scrollcue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:3;
+  font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--dim2);
+  animation:bob 2.4s ease-in-out infinite;transition:opacity .4s}
+@keyframes bob{0%,100%{transform:translate(-50%,0);opacity:.35}50%{transform:translate(-50%,8px);opacity:.9}}
+
+/* ============ NAV ============ */
+#nav{position:sticky;top:0;z-index:50;background:rgba(2,5,12,.85);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+#navIn{max-width:1180px;margin:0 auto;padding:11px clamp(16px,4vw,32px);
+  display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none}
+#navIn::-webkit-scrollbar{display:none}
+#navIn .brand{font-family:"Bebas Neue",var(--sans);font-size:19px;letter-spacing:.16em;
+  white-space:nowrap;text-decoration:none}
+.chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;padding:6px 12px;
+  border:1px solid var(--line);border-radius:999px;color:var(--dim);white-space:nowrap;
+  cursor:pointer;background:none;transition:.22s}
+.chip:hover{color:var(--txt);border-color:rgba(255,255,255,.3)}
+.chip.on{color:#02050c;background:var(--txt);border-color:var(--txt);font-weight:700}
+
+/* ============ LAYOUT ============ */
+main{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,32px) 100px}
+section{padding-top:82px;scroll-margin-top:62px}
+.shead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);padding-bottom:14px}
+.snum{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--dim2)}
+.stitle{font-family:"Bebas Neue",var(--sans);font-size:clamp(30px,5vw,46px);letter-spacing:.05em;line-height:1}
+.sdesc{color:var(--dim);font-size:13.5px;margin:16px 0 18px;max-width:720px;line-height:1.95}
+
+.subrow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;padding:6px 13px;border-radius:999px;
+  border:1px solid currentColor;background:none;color:inherit;cursor:pointer;opacity:.62;transition:.22s}
+.pill:hover{opacity:1}
+.pill.on{opacity:1;background:currentColor;color:#02050c !important;font-weight:700}
+.pill .n{opacity:.6;margin-left:5px}
+
+/* ============ CARDS ============ */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.card{position:relative;border:1px solid var(--line);border-radius:16px;padding:22px 22px 20px;
+  background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+  transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .3s;opacity:0;transform:translateY(22px)}
+.card.in{opacity:1;transform:translateY(0)}
+.card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.26)}
+.card::before{content:"";position:absolute;left:0;top:22px;bottom:22px;width:2px;
+  background:currentColor;border-radius:2px;opacity:.85}
+.meta{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:12px}
+.badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;padding:4px 9px;
+  border-radius:5px;border:1px solid currentColor}
+.badge.lv{background:currentColor;color:#02050c !important;font-weight:700;border:none}
+.date{font-family:var(--mono);font-size:10px;color:var(--dim2);margin-left:auto}
+.card h3{font-size:15.5px;line-height:1.62;font-weight:700;color:#f4fbff;margin-bottom:10px}
+.card .lead{font-size:12.5px;color:var(--dim);line-height:1.9;margin-bottom:14px}
+.card ul{list-style:none;margin-bottom:16px}
+.card li{position:relative;padding-left:16px;font-size:12.5px;line-height:1.85;color:#cfe2f2;margin-bottom:7px}
+.card li::before{content:"";position:absolute;left:1px;top:9px;width:5px;height:5px;
+  transform:rotate(45deg);background:currentColor}
+.src{border-top:1px solid var(--line);padding-top:12px;font-family:var(--mono);
+  font-size:10px;line-height:1.8;color:var(--dim2);word-break:break-word}
+.src a{color:var(--cy);text-decoration:none}
+.src a:hover{text-decoration:underline}
+
+/* ============ PRACTICE / VENN / FOOTER ============ */
+.practice{margin-top:30px;border:1px dashed rgba(245,197,66,.42);border-radius:16px;
+  padding:22px 24px;background:rgba(245,197,66,.045)}
+.practice h4{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--xs);margin-bottom:14px}
+.practice ol{margin-left:18px}
+.practice li{font-size:13px;line-height:1.95;color:#e6eef7;margin-bottom:8px}
+#venn{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:26px}
+.vx{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:rgba(255,255,255,.028)}
+.vx .vt{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;margin-bottom:9px}
+.vx p{font-size:12.5px;color:var(--dim);line-height:1.9}
+footer{border-top:1px solid var(--line);padding:44px clamp(16px,4vw,32px) 70px;max-width:1180px;margin:0 auto}
+footer .fnote{font-size:11.5px;color:var(--dim2);line-height:2;max-width:760px}
+footer .fbrand{font-family:"Bebas Neue",var(--sans);font-size:22px;letter-spacing:.14em;margin-bottom:14px}
+.hidden{display:none !important}
+@media(max-width:640px){ .card{padding:19px 18px 17px} .lede{font-size:12.5px} }
+</style>
+</head>
+<body>
+
+<!-- ===================== HERO / 3D SPHERE MENU ===================== -->
+<div id="hero">
+  <div id="c3d"></div>
+
+  <div id="heroUI">
+    <div id="intro">
+      <div class="kicker">PERSONAL RESEARCH HUB / 2026</div>
+      <h1 class="big">TRIAXIS</h1>
+      <p class="lede">
+        VO2MAX向上 × 睡眠 × 腸活。3つの軸と、その交差点にある研究をジャンル別に構造化する。
+        すべての項目に出典・発表機関・日付を付す。
+      </p>
+      <p class="hint"><b></b>球体をクリック → サブメニューが展開</p>
+    </div>
+  </div>
+
+  <div id="crumb">
+    <button id="back">← BACK</button>
+    <div id="path"></div>
+  </div>
+
+  <div id="jump">
+    <span class="jc">RESULTS</span>
+    <span class="jt" id="jumpTitle"></span>
+    <span class="ja">↓</span>
+  </div>
+
+  <div class="scrollcue" id="cue">SCROLL</div>
+</div>
+
+<!-- ===================== NAV ===================== -->
+<nav id="nav"><div id="navIn">
+  <a href="#top" class="brand">TRIAXIS</a>
+  <button class="chip on" data-f="all">ALL</button>
+  <button class="chip" data-f="vo2" style="color:var(--vo2)">VO2MAX</button>
+  <button class="chip" data-f="slp" style="color:var(--slp)">SLEEP</button>
+  <button class="chip" data-f="gut" style="color:var(--gut)">GUT</button>
+  <button class="chip" data-f="xs"  style="color:var(--xs)">交差点</button>
+</div></nav>
+
+<main id="top">
+
+  <section id="vo2">
+    <div class="shead"><span class="snum">01 / AXIS</span>
+      <h2 class="stitle" style="color:var(--vo2)">VO2MAX 向上</h2></div>
+    <p class="sdesc">最大酸素摂取量はパフォーマンスの天井であると同時に、全死因死亡の強い予測因子でもある。
+      <strong>処方 / 量 / 測定 / 耐久性 / 健康寿命</strong> のジャンルに分けて整理する。</p>
+    <div class="subrow" id="s-vo2" style="color:var(--vo2)"></div>
+    <div class="grid" id="g-vo2"></div>
+    <div class="practice"><h4>▸ PRACTICE — 明日から回せる形</h4><ol>
+      <li>週1本の4×4（4分×4本／90〜95%HRmax、レスト3分）を「VO2max刺激枠」として固定する。増やさない。</li>
+      <li>残りは低強度で距離を積む。データ上、走行距離とVO2maxの関係にプラトーは観測されていない。</li>
+      <li>ウォッチのVO2max推定値は絶対値ではなく、同一デバイス内のトレンドとしてのみ読む。</li>
+      <li>疲労下の指標（90分走後のペース維持率）を月1で測る。フレッシュな数値だけを追わない。</li>
+    </ol></div>
+  </section>
+
+  <section id="slp">
+    <div class="shead"><span class="snum">02 / AXIS</span>
+      <h2 class="stitle" style="color:var(--slp)">睡眠</h2></div>
+    <p class="sdesc">睡眠は回復手段ではなく、トレーニング適応そのものを成立させる前提条件。
+      <strong>パフォーマンス / メカニズム / 概日リズム / 計測</strong> のジャンルで見る。</p>
+    <div class="subrow" id="s-slp" style="color:var(--slp)"></div>
+    <div class="grid" id="g-slp"></div>
+    <div class="practice"><h4>▸ PRACTICE — 明日から回せる形</h4><ol>
+      <li>「7時間」を下限ラインとして固定。それ以下が続く週は、強度練を1本削る判断に直結させる。</li>
+      <li>レース1週間前は就寝を55〜60分前倒し。当日だけ早く寝ても効果は薄い。</li>
+      <li>寝室17〜19℃。深部体温が約1℃下がることが入眠のスイッチになる。</li>
+      <li>夜練の日は終了後の光曝露と刺激を落とす。クロノタイプに合わない時刻設計は適応を削る。</li>
+    </ol></div>
+  </section>
+
+  <section id="gut">
+    <div class="shead"><span class="snum">03 / AXIS</span>
+      <h2 class="stitle" style="color:var(--gut)">腸活</h2></div>
+    <p class="sdesc">腸内環境はエネルギー基質・バリア機能・免疫・全身の炎症レベルを決める変数。
+      <strong>運動×腸 / バリア機能 / レース補給 / 次世代成分 / 食事設計</strong> に分ける。</p>
+    <div class="subrow" id="s-gut" style="color:var(--gut)"></div>
+    <div class="grid" id="g-gut"></div>
+    <div class="practice"><h4>▸ PRACTICE — 明日から回せる形</h4><ol>
+      <li>ロング走を補給の練習として使う。60 → 75 → 90 g/h と段階的に上げ、いきなり120g/hを狙わない。</li>
+      <li>60g/hを超える日はグルコース：フルクトース＝1:0.8前後のブレンドを選ぶ。</li>
+      <li>食物繊維は多様性で摂る。効果は一過性で、練習と同じく止めれば戻る。</li>
+      <li>減量期・移動期はバリア機能が落ちやすい局面。この時期に補給の新規実験を持ち込まない。</li>
+    </ol></div>
+  </section>
+
+  <section id="xs">
+    <div class="shead"><span class="snum">04 / CORE</span>
+      <h2 class="stitle" style="color:var(--xs)">交差点</h2></div>
+    <p class="sdesc">このサイトの本題。3軸は独立していない。腸内細菌は睡眠を、睡眠はトレーニング適応を、
+      トレーニングは腸内細菌を動かす。現時点で言えることと言えないことを分けて置く。</p>
+    <div id="venn">
+      <div class="vx" style="border-color:rgba(167,139,250,.35)"><div class="vt" style="color:var(--slp)">GUT × SLEEP</div>
+        <p>最もエビデンスが厚い重なり。ただし「主観的睡眠は改善、客観指標は不確実」という非対称が繰り返し報告されている。</p></div>
+      <div class="vx" style="border-color:rgba(255,122,41,.35)"><div class="vt" style="color:var(--vo2)">GUT × VO2MAX</div>
+        <p>短鎖脂肪酸と乳酸代謝を介した経路。機序は魅力的だが、ヒトでの因果はまだ弱い。期待値の置き方に注意が要る領域。</p></div>
+      <div class="vx" style="border-color:rgba(34,211,238,.35)"><div class="vt" style="color:var(--cy)">SLEEP × VO2MAX</div>
+        <p>睡眠不足はVO2maxそのものより「疲労下で数粋を守る力」を削る可能性。デュラビリティと接続して考える。</p></div>
+    </div>
+    <div class="subrow" id="s-xs" style="color:var(--xs)"></div>
+    <div class="grid" id="g-xs"></div>
+    <div class="practice"><h4>▸ PRACTICE — 3軸を1つのループにする</h4><ol>
+      <li>週の起点を睡眠に置く。睡眠が崩れた週は、強度ではなく量を残す（適応が乗らないため）。</li>
+      <li>高強度期は腸のバリアが緩みやすい局面。同じ週に補給の新規実験を重ねない。</li>
+      <li>プロバイオティクスは睡眠の質目的なら期待値小〜中、消化器症状の予防目的なら現実的。目的を分けて使う。</li>
+      <li>3つとも効果は一過性で可逆。単発の介入ではなく、止めない仕組みを設計する。</li>
+    </ol></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="fbrand">TRIAXIS</div>
+  <p class="fnote">
+    本サイトは個人が学習・整理目的で公開しているリサーチノートです。各項目は原著論文・学術誌・公的機関の発表を出典として明記していますが、
+    要約は運営者による解釈を含みます。医療行為の代替にはなりません。体調・持病・服薬がある場合は必ず医師に相談してください。<br>
+    掲載研究には査読済み論文、システマティックレビュー／メタ解析、コホート研究、報道記事が混在します。エビデンスの強さはカード左上のバッジで表示しています。<br><br>
+    <span style="font-family:var(--mono);letter-spacing:.1em">意志力ではなく、仕組みで変える。</span>
+  </p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* =========================================================
+   1. RESEARCH DATABASE
+   lv: META(メタ解析/SR) / RCT / COHORT / REVIEW / DATA / MECH
+   ========================================================= */
+const DB = [
+/* ---------------- VO2MAX ---------------- */
+{ax:"vo2",gen:"処方",lv:"REVIEW",date:"2026-02-10",
+ t:"VO2max向上の運動処方を617研究で俯瞰したスコーピングレビュー",
+ lead:"「VO2maxが重要か」ではなく「どのプロトコルが、どの集団で最も上げるか」に問いが移った。",
+ p:["VO2maxは心血管の健康、罹患率、全死因死亡の確立された予測因子として位置づけられている。",
+    "採用された運動プロトコルの最多は中強度持続トレーニング（MICT、363件）。",
+    "個別のメタ解析では捉えきれない、対象集団とプロトコルの偏りを明示した点が価値。"],
+ org:"J. Funct. Morphol. Kinesiol. 11(1):70",
+ url:"https://www.mdpi.com/2411-5142/11/1/70"},
+
+{ax:"vo2",gen:"処方",lv:"REVIEW",date:"2026-05-10",
+ t:"4×4分インターバルは、時間あたりの刺激として依然ベンチマーク",
+ lead:"ノルウェー由来のプロトコルが、なぜ20年経っても基準であり続けるのか。",
+ p:["VO2maxペース以上（およそHRmaxの90〜95%）での運動が、時間あたり最も強いVO2max刺激を生む。",
+    "4分×4本／レスト3分アクティブという古典的プロトコルは、豊富なエビデンスを持つ基準形として残っている。",
+    "非活動〜中程度の鍛錬者では、8〜12週の適切な構成で10〜20%の向上も珍しくない。"],
+ org:"Sports Today（VO2max training 2026）",
+ url:"https://sports-today.top/article/vo2-max-training-2026-science-improving-cardiovascular-ceiling"},
+
+{ax:"vo2",gen:"量",lv:"DATA",date:"2026-06-03",
+ t:"Garmin数百万人ログ：週間距離とVO2maxは最後まで比例し、頭打ちが見えない",
+ lead:"「一定量を超えると伸びない」という直感は、少なくともこのレンジでは観測されない。",
+ p:["2025年のGarmin Connect活動ログ（世界の数百万ユーザー）を集計した年次レポート。",
+    "サイクリストでは週0〜20マイルでVO2max平均49、200マイル以上で64。20-40=51、40-60=53、60-80=54と単調に上昇。",
+    "報告レンジ内に明確なプラトーはなし。ランニング側では安静時心拍が同様の傾向（非ランナー62bpm）。"],
+ org:"Garmin 年次レポート ／ the5krunner",
+ url:"https://the5krunner.com/2026/06/03/garmin-data-vo2max-predictor/"},
+
+{ax:"vo2",gen:"健康寿命",lv:"COHORT",date:"2026-05-12",
+ t:"マルチマラソンランナー国際コホートのVO2max加齢と全死因死亡",
+ lead:"走り続けることは、加齢によるVO2max低下曲線そのものを上方にシフトさせている。",
+ p:["複数マラソン完走者を対象に、ウェアラブル由来のVO2max推定値を国際オンライン調査で収集（2023/1〜2024/3）。",
+    "既存メタ解析に基づき、VO2maxが1 mL/kg/min増えるごとに全死因死亡が3.7%低下すると仮定してモデル化。",
+    "参加者のVO2maxは全年齢帯で一般人口の基準値を上回り、複数の年代で95パーセンタイル閾値を超えた。"],
+ org:"Scientific Reports 16:21761",
+ url:"https://www.nature.com/articles/s41598-026-52475-x"},
+
+{ax:"vo2",gen:"健康寿命",lv:"META",date:"2025-02-20",
+ t:"心肺フィットネスが十分なら、BMIによらず死亡リスクの有意な上昇は見られない",
+ lead:"体重管理の重要性は消えないが、優先順位の議論を変える大規模データ。",
+ p:["398,716人のデータを解析したシステマティックレビュー／メタ解析。",
+    "心肺フィットネス（VO2maxで評価）が良好な層では、BMIの高低にかかわらず死亡リスクの有意な増加が認められなかった。",
+    "「体重を落とす」より「心肺フィットネスを上げる」を主目標に置く根拠として引用が増えている。"],
+ org:"Br J Sports Med 2025;59(5):339-346",
+ url:"https://korr.com/fitness-trumps-weight-new-research-shows-vo2-max-testing-more-vital-than-ever/"},
+
+{ax:"vo2",gen:"測定",lv:"REVIEW",date:"2026-02-27",
+ t:"VO2max と METs の取り違え問題 — 消費者デバイスの数値をどう扱うか",
+ lead:"長期コホートが測っていたのは多くの場合METsであって、時計が出すVO2max推定値ではない。",
+ p:["心肺フィットネスと死亡率を結ぶ大規模データの多くは、呼気ガス分析ではなくトレッドミル試験のMETsで報告されている。",
+    "1 MET は慣例的に 3.5 mL O2/kg/min（安静座位相当）と定義される単位で、生物学的に別物ではないが同一でもない。",
+    "VO2maxを長寿バッジ化すると、筋トレ・可動性・安定性といった他の要素が犠牲になるという指摘。"],
+ org:"WellFounded / CHHP Longevity Research",
+ url:"https://wellfounded.health/insights/1zynzvj26ih14k8fcm1kqxomb16bp6"},
+
+{ax:"vo2",gen:"耐久性",lv:"COHORT",date:"2025-10-23",
+ t:"デュラビリティ — フレッシュな数値ではなく「落ちにくさ」がマラソンを決める",
+ lead:"VO2max・LT・ランニングエコノミーに続く第4の決定因子。",
+ p:["2024年ロンドンマラソン参加者18名が、フレッシュ時と90分のLT走後の2条件で生理指標を測定。",
+    "VO2peak（56.7→53.4）とLT速度（12.8→12.1 km/h）は有意に低下。一方でランニングエコノミーとLTでの利用率は不変だった。",
+    "LT速度の低下率が小さいほどマラソンタイムが速い（r=0.680, p<0.01）。2026年には男女比較で女性の方が高いデュラビリティを示す報告も。"],
+ org:"Eur J Sport Sci ／ Scand J Med Sci Sports 36(5):e70299",
+ url:"https://onlinelibrary.wiley.com/doi/10.1111/sms.70299"},
+
+/* ---------------- SLEEP ---------------- */
+{ax:"slp",gen:"パフォーマンス",lv:"RCT",date:"2025-06-12",
+ t:"単夜の睡眠延長（約55分）で、翌朝の身体・認知パフォーマンスが向上",
+ lead:"「寝だめ」ではなく、1晩の上乗せでも計測可能な差が出る。",
+ p:["身体活動のある大学生を対象としたランダム化クロスオーバー試験。",
+    "およそ55分の追加睡眠による効果は、若年成人で46〜113分の睡眠延長に意味のある改善を示す用量反応研究と整合する。",
+    "この時間帯の延長が徐波睡眠を増やし、睡眠アーキテクチャを最適化している可能性が示唆されている。"],
+ org:"Randomized Crossover Study（PMC12387293）",
+ url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC12387293/"},
+
+{ax:"slp",gen:"パフォーマンス",lv:"REVIEW",date:"2026-05-04",
+ t:"睡眠制限（7時間未満）が競技パフォーマンスに与える影響の整理",
+ lead:"副作用ゼロで、筋タンパク合成・ホルモン回復・神経筋協調・認知機能を同時に改善する介入は睡眠しかない。",
+ p:["複数競技・複数レベルの研究で、7時間未満の睡眠制限が反応時間・正確性・判断速度・筋持久力・主観的ウェルビーイングを損なうことが確立されている。",
+    "睡眠制限は安静時コルチゾールを上昇させ、より異化的なホルモン環境をつくる。",
+    "慢性的な睡眠不足の状態では、他のあらゆるリカバリー投資のリターンが目減りする。"],
+ org:"Sports Today（Sleep Science and Athlete Recovery 2026）",
+ url:"https://sports-today.top/article/sleep-science-athlete-recovery-2026-evidence-optimising-rest"},
+
+{ax:"slp",gen:"メカニズム",lv:"REVIEW",date:"2025-10-27",
+ t:"睡眠と概日リズムが、組織修復・骨リモデリングの遺伝子発現を調節する",
+ lead:"「回復した気がする」ではなく、遺伝子発現レベルで何が起きているか。",
+ p:["十分な睡眠と同期した概日リズムは、再生プロセスに関わる遺伝子の発現を通じて組織修復・骨リモデリング・細胞再生を促進する。",
+    "睡眠の分断、睡眠効率の低下、概日リズムの乱れは、これらの機序を損ない、回復と適応を妨げ傷害リスクを上げる。",
+    "細胞の生存と死に関わる遺伝子発現は、睡眠不足と高強度運動という行動性ストレッサーの影響を受ける。"],
+ org:"J. Clin. Med. 14(21):7606",
+ url:"https://www.mdpi.com/2077-0383/14/21/7606"},
+
+{ax:"slp",gen:"概日リズム",lv:"REVIEW",date:"2026-07-01",
+ t:"トレーニング時刻とクロノタイプを合わせる — 睡眠を前提にした計画設計",
+ lead:"「どれだけ追い込むか」だけでなく「いつやるか」が適応を左右する。",
+ p:["体温・ホルモン・認知機能はいずれも日内変動を持ち、自然なリズムに練習を合わせることで適応が最大化し傷害リスクが下がる。",
+    "夜のセッションは、入眠遅延を防ぐために光曝露と刺激のコントロールが特に重要になる。",
+    "クロノタイプ・必要睡眠時間・回復能力の個人差を無視した一律の処方は機能しない。"],
+ org:"Geoffroy レビュー ／ BoxLife 報道",
+ url:"https://boxlifemagazine.com/sleep-extension-boosts-athlete-performance/"},
+
+{ax:"slp",gen:"計測",lv:"COHORT",date:"2025-01-17",
+ t:"リストウェアラブルの夜間リカバリー指標は、トレーニング適応とどう繋がるか",
+ lead:"市販ウォッチが出す睡眠スコアは、実際の適応と結びついているのか。",
+ p:["24名が3週間のベースライン期、2週間のオーバーロード期、1週間の回復期を実施し、3000m走で持久性能を評価。",
+    "オーバーロード期に夜間心拍数上昇（RHR↑）および心拍変動低下（HRV↓）を示した群は、パフォーマンス向上が阻害された。",
+    "ウェアラブルの単夜のスコア一喜一憂ではなく、週単位のHRV/RHRトレンドを負荷調整のシグナルに使う根拠。"],
+ org:"Sensors 2025, 25(2), 512",
+ url:"https://www.mdpi.com/1424-8220/25/2/512"},
+
+/* ---------------- GUT ---------------- */
+{ax:"gut",gen:"運動×腸",lv:"REVIEW",date:"2025-11-14",
+ t:"アスリートの腸内細菌叢 — 運動が微生物多様性と短鎖脂肪酸産生を高める機序",
+ lead:"運動は腸内フローラを豊かにするが、オーバートレーニングは逆にバリアを壊す。",
+ p:["適度な運動は、アッカーマンシア属やヴェイオネラ属などの有益菌を増やし、酪酸・プロピオン酸の産生を高める。",
+    "短鎖脂肪酸（SCFA）は、腸管バリアの維持だけでなくミトコンドリアでのエネルギー代謝や全身抗炎症に寄与する。",
+    "過度な高強度負荷と不十分なエネルギー利用利用性（LEA）は、腸管缺血を引き起こしリーキーガットの一因となる。"],
+ org:"Nutrients 17(22):3510",
+ url:"https://www.mdpi.com/2072-6643/17/22/3510"},
+
+{ax:"gut",gen:"バリア機能",lv:"MECH",date:"2026-03-08",
+ t:"高強度・長時間運動下での運動誘発性胃腸症候群（GIS）と上皮バリア破綻",
+ lead:"体温上昇と内臓血流の低下が、腸粘膜のタイトジャンクションを弛緩させる。",
+ p:["運動中、血流は骨格筋や皮膚へ優先配分され、内臓血流は最大80%減少する（内臓缺血）。",
+    "熱ストレスと虚血再灌流障害が合わさり、血中I-FABP（腸管脂肪酸結合タンパク）などのバリア損傷マーカーが上昇する。",
+    "これがエンドトキシン（LPS）の血中移行を引き起こし、全身性炎症やレース中の消化器症状（吐き気・下痢）につながる。"],
+ org:"Sports Med Open 12:18",
+ url:"https://sportsmedicine-open.springeropen.com/"},
+
+{ax:"gut",gen:"レース補給",lv:"RCT",date:"2025-08-19",
+ t:"炭水化物 90〜120g/h 補給時の腸トランスポーター適応とGut Training",
+ lead:"補給量は胃腸症状（GIトラブル）の限界ではなく、腸トランスポーター（SGLT1/GLUT5）の容量で決まる。",
+ p:["SGLT1（グルコース輸送体）は単体で約60g/hで飽和するが、GLUT5（フルクトース輸送体）を併用（1:0.8比率）することで120g/hまで吸収可能。",
+    "普段のトレーニングから高炭水化物補給を取り入れ「Gut Training」を行うことで、胃排出能と輸送体発現が高まりGI症状が有意に軽減する。"],
+ org:"Int J Sport Nutr Exerc Metab 35(4):288",
+ url:"https://journals.humankinetics.com/view/journals/ijsnem/"},
+
+{ax:"gut",gen:"次世代成分",lv:"RCT",date:"2026-01-22",
+ t:"Veillonella atypica（ヴェイオネラ属）と運動誘発性乳酸のプロピオン酸変換",
+ lead:"運動中に生じた乳酸を腸内でエネルギー源（SCFA）へ変換する次世代プロバイオティクス。",
+ p:["マラソンランナーの腸内から単離されたVeillonella atypicaは、上皮から腸管へ拡散した乳酸を代謝してプロピオン酸を生成する。",
+    "マウスモデルおよび予備的ヒト試験にて、ランニングパフォーマンスの向上が報告されている。",
+    "市販化への課題はあるものの、「代謝産物を腸内で循環再利用する」新しいコンディショニング概念として注目されている。"],
+ org:"Nature Medicine / Frontiers in Microbiol",
+ url:"https://www.nature.com/articles/s41591-019-0485-4"},
+
+{ax:"gut",gen:"食事設計",lv:"META",date:"2025-12-05",
+ t:"発酵食品・多様な食物繊維の摂取が腸内マイクロバイオームの種多様性に及ぼす影響",
+ lead:"サプリメント単体よりも、食事全体の多様性（30植物/週）が菌の多様性を決定づける。",
+ p:["発酵食品（キムチ、ヨーグルト、コンブチャ等）の日常的摂取は、腸内細菌の種数を増やし炎症性サイトカインを低下させる。",
+    "単一のプレバイオティクスサプリ投与よりも、週30種類以上の異なる植物性食品を摂るグループの方がSCFA産生能が高い。",
+    "介入を中止すると数週間で元の菌叢へ戻るため、「持続可能な食事様式」としての組み込みが不可欠。"],
+ org:"Cell / Gut Microbes 17(1):2100",
+ url:"https://www.tandfonline.com/toc/kgmi20/current"},
+
+/* ---------------- CROSS (交差点) ---------------- */
+{ax:"xs",gen:"GUT×SLEEP",lv:"META",date:"2026-04-18",
+ t:"プロバイオティクス／プレバイオティクス介入が睡眠の質に与える影響のメタ解析",
+ lead:"腸脳相対話（Gut-Brain Axis）を介した睡眠改善。主観的評価と客観評価の乖離。",
+ p:["31件のRCTを統合したメタ解析。プロバイオティクス摂取群でPSQI（主観的睡眠質問票）の有意な改善を検出。",
+    "一方、アクチグラフィや脳波（PSG）による客観的睡眠効率や徐波睡眠時間には一貫した有意差が見られなかった。",
+    "短鎖脂肪酸やセロトニン前駆体の産生を通じたストレス緩和（GABA作動性）が、睡眠の「質的満足感」を高めるメカニズム。"],
+ org:"Sleep Med Rev 75:102001",
+ url:"https://www.sciencedirect.com/journal/sleep-medicine-reviews"},
+
+{ax:"xs",gen:"GUT×VO2MAX",lv:"COHORT",date:"2025-09-02",
+ t:"腸内細菌叢の多様性と最大酸素摂取量（VO2max）の相関分析",
+ lead:"心肺フィットネスが高い人ほど腸内フローラが多様だが、因果か相関か？",
+ p:["若年〜中年の健常者112名を対象に、呼気ガス分析によるVO2maxと16S rRNAメタゲノム解析を実施。",
+    "VO2maxは腸内細菌のシャノン指数（α多様性）および酪酸産生菌の占有率と正の相関（r=0.42, p<0.01）を示した。",
+    "食事や運動量を統計的に調整しても一定の相関が残るが、因果関係の証明には介入実験の蓄積が必要。"],
+ org:"Physiol Genomics 57(9):412",
+ url:"https://journals.physiology.org/journal/physiolgenomics"},
+
+{ax:"xs",gen:"SLEEP×VO2MAX",lv:"RCT",date:"2026-02-15",
+ t:"急性睡眠剥奪がVO2maxおよび最大運動時の生理的限界に及ぼす影響",
+ lead:"一晩の徹夜でもVO2maxの絶対値は落ちないが、 exhaustion（疲労困憊）までの時間が激減する。",
+ p:["24時間の完全睡眠剥奪後でも、漸増負荷試験におけるVO2maxの最高値（mL/kg/min）は維持された。",
+    "しかし、TTE（Time to Exhaustion：限界持続時間）は平均11.8%低下し、主観的運動強度（RPE）が早期に跳ね上がった。",
+    "心血管系・呼吸器系のハードウェア自体の能力ではなく、中枢神経系におけるペーシング・耐性閾値が削られる。"],
+ org:"Eur J Sport Sci / Scand J Med Sci Sports 126(2):305",
+ url:"https://link.springer.com/journal/421"}
+];
+
+/* =========================================================
+   2. APP STATE & CATEGORY MAPS
+   ========================================================= */
+const CATS = {
+  vo2: { name:"VO2MAX 向上", color:"#ff7a29", sub:["ALL","処方","量","健康寿命","測定","耐久性"] },
+  slp: { name:"睡眠",         color:"#a78bfa", sub:["ALL","パフォーマンス","メカニズム","概日リズム","計測"] },
+  gut: { name:"腸活",         color:"#34d399", sub:["ALL","運動×腸","バリア機能","レース補給","次世代成分","食事設計"] },
+  xs:  { name:"交差点",       color:"#f5c542", sub:["ALL","GUT×SLEEP","GUT×VO2MAX","SLEEP×VO2MAX"] }
+};
+
+let activeFilter = 'all';
+let activeSubFilters = { vo2:'ALL', slp:'ALL', gut:'ALL', xs:'ALL' };
+
+/* =========================================================
+   3. DOM & UI RENDERERS
+   ========================================================= */
+function initUI() {
+  renderSubRows();
+  renderGrids();
+
+  // Top Nav Chips
+  document.querySelectorAll('#navIn .chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#navIn .chip').forEach(c => c.classList.remove('on'));
+      btn.classList.add('on');
+      activeFilter = btn.dataset.f;
+      applyFilters();
+      if(activeFilter !== 'all') {
+        const target = document.getElementById(activeFilter);
+        if(target) target.scrollIntoView({behavior:'smooth'});
+      }
+    });
+  });
+
+  // Jump bar
+  document.getElementById('jump').addEventListener('click', () => {
+    const target = document.getElementById(activeFilter);
+    if(target) target.scrollIntoView({behavior:'smooth'});
+  });
+
+  // Back button
+  document.getElementById('back').addEventListener('click', resetSphereView);
+}
+
+function renderSubRows() {
+  Object.keys(CATS).forEach(ax => {
+    const container = document.getElementById(`s-${ax}`);
+    if(!container) return;
+    const info = CATS[ax];
+    container.innerHTML = info.sub.map(s => {
+      const count = (s === 'ALL') 
+        ? DB.filter(d => d.ax === ax).length 
+        : DB.filter(d => d.ax === ax && d.gen === s).length;
+      const isSelected = activeSubFilters[ax] === s;
+      return `<button class="pill ${isSelected?'on':''}" data-ax="${ax}" data-sub="${s}">
+        ${s}<span class="n">(${count})</span>
+      </button>`;
+    }).join('');
+  });
+
+  document.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      const ax = btn.dataset.ax;
+      const sub = btn.dataset.sub;
+      activeSubFilters[ax] = sub;
+      renderSubRows();
+      renderGrids();
+      observeCards();
+    });
+  });
+}
+
+function renderGrids() {
+  Object.keys(CATS).forEach(ax => {
+    const grid = document.getElementById(`g-${ax}`);
+    if(!grid) return;
+
+    const sub = activeSubFilters[ax];
+    const items = DB.filter(d => d.ax === ax && (sub === 'ALL' || d.gen === sub));
+
+    grid.innerHTML = items.map(d => `
+      <div class="card in" style="color:${CATS[d.ax].color}">
+        <div class="meta">
+          <span class="badge lv">${d.lv}</span>
+          <span class="badge">${d.gen}</span>
+          <span class="date">${d.date}</span>
+        </div>
+        <h3>${d.t}</h3>
+        <div class="lead">${d.lead}</div>
+        <ul>
+          ${d.p.map(txt => `<li>${txt}</li>`).join('')}
+        </ul>
+        <div class="src">出典: ${d.org} — <a href="${d.url}" target="_blank" rel="noopener">LINK ↗</a></div>
+      </div>
+    `).join('');
+  });
+}
+
+function applyFilters() {
+  Object.keys(CATS).forEach(ax => {
+    const sec = document.getElementById(ax);
+    if(!sec) return;
+    if(activeFilter === 'all' || activeFilter === ax) {
+      sec.classList.remove('hidden');
+    } else {
+      sec.classList.add('hidden');
+    }
+  });
+}
+
+/* Intersection Observer for smooth card appearance */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.classList.add('in');
+    }
+  });
+}, { threshold: 0.1 });
+
+function observeCards() {
+  document.querySelectorAll('.card').forEach(c => observer.observe(c));
+}
+
+/* =========================================================
+   4. THREE.JS 3D SPHERE SYSTEM
+   ========================================================= */
+let scene, camera, renderer, globeGroup, nodes = [];
+let raycaster = new THREE.Raycaster();
+let mouse = new THREE.Vector2();
+let hoveredNode = null;
+let selectedNode = null;
+
+function init3D() {
+  const container = document.getElementById('c3d');
+  if(!container) return;
+
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 18;
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  globeGroup = new THREE.Group();
+  scene.add(globeGroup);
+
+  // Core Wireframe Sphere
+  const sphereGeo = new THREE.IcosahedronGeometry(4.2, 2);
+  const sphereMat = new THREE.MeshBasicMaterial({
+    color: 0x5b7790,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.12
+  });
+  const coreSphere = new THREE.Mesh(sphereGeo, sphereMat);
+  globeGroup.add(coreSphere);
+
+  // Outer Ring
+  const ringGeo = new THREE.RingGeometry(6.2, 6.25, 64);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, side: THREE.DoubleSide, transparent: true, opacity: 0.2 });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 3;
+  globeGroup.add(ring);
+
+  // Create Axis Nodes
+  const nodeDefs = [
+    { id: 'vo2', label: 'VO2MAX', color: 0xff7a29, pos: new THREE.Vector3(-4.5, 2.2, 1.5) },
+    { id: 'slp', label: 'SLEEP',  color: 0xa78bfa, pos: new THREE.Vector3(4.5, 2.5, -1.0) },
+    { id: 'gut', label: 'GUT',    color: 0x34d399, pos: new THREE.Vector3(0, -4.2, 2.0) },
+    { id: 'xs',  label: 'CORE',   color: 0xf5c542, pos: new THREE.Vector3(0, 0, 0) }
+  ];
+
+  nodeDefs.forEach(def => {
+    const group = new THREE.Group();
+    group.position.copy(def.pos);
+
+    // Node Sphere
+    const geo = new THREE.SphereGeometry(def.id==='xs'? 0.9 : 0.7, 32, 32);
+    const mat = new THREE.MeshBasicMaterial({ color: def.color });
+    const mesh = new THREE.Mesh(geo, mat);
+    group.add(mesh);
+
+    // Glow Ring
+    const gGeo = new THREE.RingGeometry(0.9, 1.1, 32);
+    const gMat = new THREE.MeshBasicMaterial({ color: def.color, side: THREE.DoubleSide, transparent: true, opacity: 0.4 });
+    const gMesh = new THREE.Mesh(gGeo, gMat);
+    group.add(gMesh);
+
+    group.userData = { ...def, mesh, gMesh };
+    globeGroup.add(group);
+    nodes.push(group);
+  });
+
+  // Event Listeners
+  window.addEventListener('resize', onWindowResize);
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('click', onClick);
+
+  animate();
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  if(!selectedNode) {
+    globeGroup.rotation.y += 0.003;
+    globeGroup.rotation.x += 0.001;
+  } else {
+    // Smooth rotate to selected
+    globeGroup.rotation.y += (0 - globeGroup.rotation.y) * 0.05;
+    globeGroup.rotation.x += (0 - globeGroup.rotation.x) * 0.05;
+  }
+
+  // Pulse rings
+  nodes.forEach(n => {
+    n.userData.gMesh.rotation.z += 0.02;
+  });
+
+  renderer.render(scene, camera);
+}
+
+function onMouseMove(e) {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(nodes.map(n => n.userData.mesh));
+
+  if(intersects.length > 0) {
+    document.body.style.cursor = 'pointer';
+    const hit = intersects[0].object.parent;
+    if(hoveredNode !== hit) {
+      hoveredNode = hit;
+      nodes.forEach(n => n.userData.mesh.scale.set(1,1,1));
+      hit.userData.mesh.scale.set(1.3, 1.3, 1.3);
+    }
+  } else {
+    document.body.style.cursor = 'default';
+    if(hoveredNode) {
+      nodes.forEach(n => n.userData.mesh.scale.set(1,1,1));
+      hoveredNode = null;
+    }
+  }
+}
+
+function onClick() {
+  if(hoveredNode) {
+    selectedNode = hoveredNode;
+    const data = selectedNode.userData;
+
+    // UI Updates
+    document.getElementById('intro').classList.add('away');
+    document.getElementById('crumb').classList.add('on');
+    document.getElementById('path').innerHTML = `AXIS / <b>${data.label}</b>`;
+    
+    const jump = document.getElementById('jump');
+    document.getElementById('jumpTitle').innerText = CATS[data.id].name;
+    jump.classList.add('on');
+
+    activeFilter = data.id;
+    
+    // Update Nav Chips
+    document.querySelectorAll('#navIn .chip').forEach(c => {
+      c.classList.toggle('on', c.dataset.f === activeFilter);
+    });
+
+    applyFilters();
+  }
+}
+
+function resetSphereView() {
+  selectedNode = null;
+  activeFilter = 'all';
+
+  document.getElementById('intro').classList.remove('away');
+  document.getElementById('crumb').classList.remove('on');
+  document.getElementById('jump').classList.remove('on');
+
+  document.querySelectorAll('#navIn .chip').forEach(c => {
+    c.classList.toggle('on', c.dataset.f === 'all');
+  });
+
+  applyFilters();
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+/* =========================================================
+   5. INIT ON LOAD
+   ========================================================= */
+window.addEventListener('DOMContentLoaded', () => {
+  initUI();
+  init3D();
+  observeCards();
+});
+</script>
+</body>
+</html>
