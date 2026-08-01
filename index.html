@@ -398,6 +398,78 @@ section.axis.hide{display:none}
 .vx p{font-size:12.5px;color:var(--dim);line-height:1.95}
 
 /* ═══════════════════════════════════════════════════════════
+   10.5 ARCHIVE (月別履歴)
+   ═══════════════════════════════════════════════════════════ */
+section.archive{max-width:var(--maxw);margin:0 auto;padding:clamp(80px,12vh,140px) var(--pad);
+  scroll-margin-top:64px}
+
+.arch-grid{position:relative;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:16px}
+/* timeline spine threaded behind the node row */
+.arch-grid::before{content:"";position:absolute;left:8%;right:8%;top:44px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(var(--accent-rgb),.5) 18%,
+             rgba(var(--accent-rgb),.5) 82%,transparent);
+  opacity:0;transition:opacity 1.2s .3s var(--ease)}
+.in .arch-grid::before{opacity:1}
+@media(max-width:760px){.arch-grid::before{display:none}}
+
+.mcard{position:relative;width:100%;text-align:left;
+  /* flex column so button content stays top-aligned across unequal card heights */
+  display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
+  border-radius:18px;padding:22px 22px 20px;
+  border:1px solid var(--line-soft);
+  background:linear-gradient(165deg,rgba(255,255,255,.045),rgba(255,255,255,.014));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055), 0 18px 40px -28px rgba(0,0,0,.9);
+  overflow:hidden;isolation:isolate;cursor:pointer;
+  opacity:0;transform:translateY(26px) scale(.985);
+  transition:opacity .7s var(--ease),transform .7s var(--ease),
+             border-color .35s ease,box-shadow .35s ease}
+.in .mcard{opacity:1;transform:none}
+
+.mcard::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;
+  transition:opacity .4s ease;
+  background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),
+    rgba(var(--accent-rgb),.14),transparent 62%)}
+.mcard:hover::before{opacity:1}
+.mcard:hover{border-color:rgba(var(--accent-rgb),.34);transform:translateY(-3px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),
+             0 26px 60px -30px rgba(0,0,0,1),
+             0 0 0 1px rgba(var(--accent-rgb),.07)}
+
+.mnode{flex:none;width:13px;height:13px;border-radius:50%;margin-bottom:20px;
+  border:1px solid var(--accent);background:var(--bg);
+  transition:.4s var(--ease)}
+.mcard.latest .mnode{background:var(--accent);
+  box-shadow:0 0 0 4px rgba(var(--accent-rgb),.15), 0 0 18px var(--accent)}
+.mcard:hover .mnode{transform:scale(1.25)}
+
+.mbadge{align-self:flex-start;font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;
+  padding:4px 9px;border-radius:6px;margin-bottom:12px;
+  border:1px solid var(--line);color:var(--dim)}
+.mcard.latest .mbadge{background:var(--accent);color:#04060d;font-weight:700;border-color:transparent}
+
+.mnum{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--dim2)}
+.mtitle{display:block;font-size:25px;font-weight:700;letter-spacing:-.02em;line-height:1.2;
+  color:var(--txt-strong);margin:4px 0 12px}
+.mdesc{display:block;font-size:12.5px;color:var(--dim);line-height:1.92;margin-bottom:17px}
+.mstats{margin-top:auto;display:flex;flex-wrap:wrap;gap:14px;
+  border-top:1px solid var(--line-soft);padding-top:13px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim2)}
+.mstats b{color:var(--accent);font-weight:400}
+
+.mflash{position:absolute;left:0;right:0;bottom:0;padding:10px;text-align:center;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;
+  background:rgba(var(--accent-rgb),.16);color:var(--accent);
+  border-top:1px solid rgba(var(--accent-rgb),.3);
+  transform:translateY(101%);transition:transform .45s var(--ease)}
+.mcard.flash .mflash{transform:none}
+
+.arch-note{margin-top:24px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  color:var(--dim2);opacity:0;transition:.9s .5s var(--ease)}
+.in .arch-note{opacity:1}
+
+/* ═══════════════════════════════════════════════════════════
    11. FOOTER
    ═══════════════════════════════════════════════════════════ */
 footer{position:relative;z-index:5;border-top:1px solid var(--line-soft);
@@ -421,7 +493,7 @@ footer{position:relative;z-index:5;border-top:1px solid var(--line-soft);
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
     transition-duration:.01ms !important}
   .card,.sdesc,.subrow,.practice,.vx,.venn,.lede,.hero-axes,.hero-cue,
-  h1.wordmark .ch,.stitle .ch{opacity:1 !important;transform:none !important}
+  .mcard,.arch-note,h1.wordmark .ch,.stitle .ch{opacity:1 !important;transform:none !important}
   .hero-rule{transform:scaleX(1) !important}
 }
 </style>
@@ -453,6 +525,7 @@ footer{position:relative;z-index:5;border-top:1px solid var(--line-soft);
   <a class="rail-i" href="#slp" style="color:#a78bfa"><span class="dot"></span><span class="lab">SLEEP</span></a>
   <a class="rail-i" href="#gut" style="color:#34d399"><span class="dot"></span><span class="lab">GUT</span></a>
   <a class="rail-i" href="#xs"  style="color:#f5c542"><span class="dot"></span><span class="lab">交差点</span></a>
+  <a class="rail-i" href="#archive" style="color:#22d3ee"><span class="dot"></span><span class="lab">ARCHIVE</span></a>
 </nav>
 
 <!-- ══════════ HERO ══════════ -->
@@ -483,6 +556,7 @@ footer{position:relative;z-index:5;border-top:1px solid var(--line-soft);
   <button class="chip" data-f="slp" style="color:#a78bfa"><span>SLEEP</span></button>
   <button class="chip" data-f="gut" style="color:#34d399"><span>GUT</span></button>
   <button class="chip" data-f="xs"  style="color:#f5c542"><span>交差点</span></button>
+  <button class="chip" data-jump="archive" style="color:#22d3ee"><span>ARCHIVE ↓</span></button>
   <span class="nav-count" id="navCount"></span>
 </div></nav>
 
@@ -587,6 +661,18 @@ footer{position:relative;z-index:5;border-top:1px solid var(--line-soft);
       <li>プロバイオティクスは睡眠の質目的なら期待値小〜中、消化器症状の予防目的なら現実的。目的を分けて使う。</li>
       <li>3つとも効果は一過性で可逆。単発の介入ではなく、止めない仕組みを設計する。</li>
     </ol></div>
+  </section>
+
+  <section class="archive" id="archive">
+    <div class="shead">
+      <div class="sglow"></div>
+      <span class="snum">05 / ARCHIVE</span>
+      <h2 class="stitle" data-text="月別履歴アーカイブ"></h2>
+    </div>
+    <p class="sdesc">日次ブリーフの蓄積を、月単位のノードとして辿る。
+      <strong>Monthly Research History Node</strong></p>
+    <div class="arch-grid" id="archGrid"></div>
+    <p class="arch-note">※ 各月のアーカイブページは準備中です。</p>
   </section>
 
 </main>
@@ -805,6 +891,21 @@ const CATS = {
 };
 const AXES = Object.keys(CATS);
 
+/* 月別履歴アーカイブ — 現状はノード表示のみ（各月の遷移先は未実装） */
+const ARCHIVE = [
+  {ym:"2026.08", label:"2026年8月", latest:true, n:10, state:"ACTIVE",
+   desc:"DAT腸内代謝物・80/20ポラライズド走法・徐波睡眠断片化とTTパワー相関など最新10件。"},
+  {ym:"2026.07", label:"2026年7月", n:30, state:"ARCHIVED",
+   desc:"TMAOと心房細動、HIIT/SITメタ分析、DLMO精密クロノセラピーなど月間TOP30選。"},
+  {ym:"2026.06", label:"2026年6月", n:25, state:"ARCHIVED",
+   desc:"ゾーン2代謝効率、ミトコンドリア密度向上、スマートリングHRV相関分析。"},
+  {ym:"2026.05", label:"2026年5月", n:20, state:"ARCHIVED",
+   desc:"長寿遺伝子NAD+ブースター、暑熱順化プロトコル、腸内フローラ初期研究。"}
+];
+const ARCHIVE_THEME = {color:"#22d3ee", rgb:"34,211,238"};
+const themeFor = id =>
+  id === 'archive' ? ARCHIVE_THEME : (CATS[id] || ARCHIVE_THEME);
+
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const FINE    = matchMedia('(pointer: fine)').matches;
 const isSmall = () => innerWidth < 820;
@@ -886,6 +987,22 @@ function renderGrid(ax, stagger){
 
 const renderAllGrids = () => AXES.forEach(ax => renderGrid(ax, true));
 
+function renderArchive(){
+  const grid = $('#archGrid'); if(!grid) return;
+  grid.innerHTML = ARCHIVE.map(m => `<button class="mcard${m.latest ? ' latest' : ''}" type="button">
+    <span class="mnode"></span>
+    <span class="mbadge">${m.latest ? 'LATEST BRIEF' : 'ARCHIVE'}</span>
+    <span class="mnum">${esc(m.ym)}</span>
+    <span class="mtitle">${esc(m.label)}</span>
+    <span class="mdesc">${esc(m.desc)}</span>
+    <span class="mstats"><span><b>${m.n}</b> REPORTS</span><span>${esc(m.state)}</span></span>
+    <span class="mflash">${m.latest ? '現在表示中のブリーフです' : 'ARCHIVE PENDING — 準備中'}</span>
+  </button>`).join('');
+
+  $$('.mcard', grid).forEach((c,i) => { c.style.transitionDelay = (i*0.08) + 's'; });
+  attachSpotlight(grid);
+}
+
 function updateNavCount(){
   const n = activeFilter === 'all' ? DB.length : DB.filter(d => d.ax === activeFilter).length;
   $('#navCount').textContent = String(n).padStart(2,'0') + ' ENTRIES';
@@ -894,7 +1011,7 @@ function updateNavCount(){
 /* cursor-tracking spotlight on cards */
 function attachSpotlight(root){
   if(!FINE) return;
-  $$('.card', root).forEach(card => {
+  $$('.card,.mcard', root).forEach(card => {
     card.addEventListener('pointermove', e => {
       const r = card.getBoundingClientRect();
       card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
@@ -955,7 +1072,7 @@ let currentAxis = null;
 function setTheme(ax){
   if(ax === currentAxis) return;
   currentAxis = ax;
-  const c = ax ? CATS[ax] : {color:'#22d3ee', rgb:'34,211,238'};
+  const c = themeFor(ax);
   document.documentElement.style.setProperty('--accent', c.color);
   document.documentElement.style.setProperty('--accent-rgb', c.rgb);
   $$('#rail .rail-i').forEach(r => r.classList.toggle('on', r.getAttribute('href') === '#' + ax));
@@ -966,7 +1083,7 @@ function setTheme(ax){
 function spy(){
   const mid = innerHeight * 0.42;
   let found = null;
-  for(const ax of AXES){
+  for(const ax of [...AXES, 'archive']){
     const s = $('#' + ax);
     if(!s || s.classList.contains('hide')) continue;
     const r = s.getBoundingClientRect();
@@ -1244,7 +1361,11 @@ function initScene(){
   });
 
   const targetColor = new THREE.Color('#22d3ee');
-  window.__setSceneAxis = ax => targetColor.set(ax ? CATS[ax].color : '#22d3ee');
+  window.__setSceneAxis = ax => targetColor.set(themeFor(ax).color);
+
+  /* brief flare, fired when an archive node is selected */
+  let pulseT = 0;
+  window.__pulseScene = () => { pulseT = 1; };
 
   const clock = new THREE.Clock();
   const v = new THREE.Vector3();
@@ -1280,7 +1401,9 @@ function initScene(){
     dustMat.uniforms.uTime.value  = t;
     shellMat.uniforms.uTime.value = t;
     shellMat.uniforms.uColor.value.lerp(targetColor, 0.035);
-    shellMat.uniforms.uOpacity.value = 0.6 - heroP*0.32;
+    pulseT = Math.max(0, pulseT - dt*1.5);
+    shellMat.uniforms.uOpacity.value = (0.6 - heroP*0.32) + pulseT*0.9;
+    coreWire.scale.setScalar(1 + pulseT*0.06);
 
     links.forEach(l => {
       const k = (t*0.22 + l.off) % 1;
@@ -1338,8 +1461,24 @@ function initScene(){
    ========================================================= */
 function bindEvents(){
   document.addEventListener('click', e => {
+    const jump = e.target.closest('[data-jump]');
+    if(jump){
+      const t = $('#' + jump.dataset.jump);
+      if(t) t.scrollIntoView({behavior: REDUCED ? 'auto' : 'smooth', block:'start'});
+      return;
+    }
+
+    const m = e.target.closest('.mcard');
+    if(m){
+      m.classList.add('flash');
+      if(window.__pulseScene) window.__pulseScene();
+      clearTimeout(m._flashT);
+      m._flashT = setTimeout(() => m.classList.remove('flash'), 1700);
+      return;
+    }
+
     const chip = e.target.closest('#navIn .chip');
-    if(chip){ setAxisFilter(chip.dataset.f, true); return; }
+    if(chip && chip.dataset.f){ setAxisFilter(chip.dataset.f, true); return; }
 
     const pill = e.target.closest('.pill');
     if(pill){ setSubFilter(pill.dataset.ax, pill.dataset.sub); return; }
@@ -1382,12 +1521,13 @@ function boot(){
   initSplit();
   renderSubRows();
   renderAllGrids();
+  renderArchive();
   applyAxisFilter();
   initVenn();
   initCursor();
   bindEvents();
 
-  $$('section.axis').forEach(s => {
+  $$('section.axis, section.archive').forEach(s => {
     if(REDUCED) s.classList.add('in');
     else sectionObserver.observe(s);
   });
