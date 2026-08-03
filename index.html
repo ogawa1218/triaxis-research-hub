@@ -1,1546 +1,1584 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>TRIAXIS ／ VO2MAX × 睡眠 × 腸活 リサーチハブ</title>
-<meta name="description" content="VO2MAX向上・睡眠・腸活の3軸と、その交差点にある研究を構造化する個人リサーチハブ。意志力ではなく、仕組みで変える。">
-<meta name="theme-color" content="#04060d">
-<meta property="og:title" content="TRIAXIS ／ VO2MAX × 睡眠 × 腸活 リサーチハブ">
-<meta property="og:description" content="3つの軸と、その交差点にある研究へ潜る。">
-<meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-<style>
-/* ═══════════════════════════════════════════════════════════
-   0. TOKENS
-   ═══════════════════════════════════════════════════════════ */
-:root{
-  --bg:#04060d;
-  --txt:#eaf2ff;
-  --txt-strong:#ffffff;
-  --dim:#93a7c0;
-  --dim2:#5f7691;
-  --line:rgba(255,255,255,.09);
-  --line-soft:rgba(255,255,255,.05);
-
-  --vo2:#ff7a29;
-  --slp:#a78bfa;
-  --gut:#34d399;
-  --xs:#f5c542;
-  --cy:#22d3ee;
-
-  /* swapped per-section by the scroll spy */
-  --accent:#22d3ee;
-  --accent-rgb:34,211,238;
-
-  --mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace;
-  --sans:"Space Grotesk","Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic UI",sans-serif;
-
-  --ease:cubic-bezier(.16,1,.3,1);
-  --ease-io:cubic-bezier(.65,0,.35,1);
-
-  --pad:clamp(20px,5vw,72px);
-  --maxw:1200px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRIAXIS ／ 最先端ヘルスケア ニュース TOP30 & ガットトレーニング特集</title>
+  <meta name="description" content="食事（腸内環境・ガットトレーニング）・ランニング（VO2Max向上）・睡眠（コンディショニング）の3軸から最新ヘルスケア研究を紐解くWeb3Dダッシュボード。">
+  <meta property="og:title" content="TRIAXIS ／ 最先端ヘルスケア ニュース TOP30 & ガットトレーニング特集">
+  <meta property="og:description" content="最先端ヘルスケア研究30選。NotebookLMディープリサーチ版ガットトレーニング完全解説。">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+:root {
+  --bg-color: #030308;
+  --bg-secondary: #08081a;
+  --text-primary: #f0f0f5;
+  --text-secondary: #8888a0;
+  --color-gut: #00f5d4;
+  --color-gut-dim: rgba(0, 245, 212, 0.15);
+  --color-running: #ff6b6b;
+  --color-running-dim: rgba(255, 107, 107, 0.15);
+  --color-sleep: #7b61ff;
+  --color-sleep-dim: rgba(123, 97, 255, 0.15);
+  --color-archive: #ffd166;
+  --color-archive-dim: rgba(255, 209, 102, 0.15);
+  --card-bg: rgba(12, 12, 28, 0.65);
+  --card-border: rgba(255, 255, 255, 0.04);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{
-  background:var(--bg);color:var(--txt);
-  font-family:var(--sans);font-weight:400;line-height:1.75;
-  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  overflow-x:hidden;
-  font-feature-settings:"palt" 1;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-a{color:inherit;text-decoration:none}
-button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
-::selection{background:var(--cy);color:#02050c}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 
-::-webkit-scrollbar{width:9px}
-::-webkit-scrollbar-track{background:#04060d}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:99px;border:3px solid #04060d}
-::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.28)}
-
-/* ═══════════════════════════════════════════════════════════
-   1. BACKDROP — webgl canvas, aura, grain, vignette
-   ═══════════════════════════════════════════════════════════ */
-#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
-#bg canvas{display:block;width:100%;height:100%}
-
-/* fallback wash when WebGL is unavailable */
-#aura{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;
-  background:
-    radial-gradient(58vw 58vw at 18% 12%, rgba(255,122,41,.10), transparent 62%),
-    radial-gradient(52vw 52vw at 84% 24%, rgba(167,139,250,.11), transparent 64%),
-    radial-gradient(60vw 60vw at 50% 96%, rgba(52,211,153,.09), transparent 66%);
-  transition:opacity .8s var(--ease)}
-html.no-webgl #aura{opacity:1}
-
-#grain{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-
-#vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
-  background:radial-gradient(130% 88% at 50% 42%, transparent 46%, rgba(2,4,10,.72) 100%)}
-
-/* ═══════════════════════════════════════════════════════════
-   2. PRELOADER
-   ═══════════════════════════════════════════════════════════ */
-#pre{position:fixed;inset:0;z-index:200;background:var(--bg);
-  display:grid;place-items:center;
-  transition:opacity .8s var(--ease),visibility .8s}
-#pre.done{opacity:0;visibility:hidden}
-.pre-in{text-align:center;width:min(300px,70vw)}
-.pre-mark{font-family:var(--mono);font-size:11px;letter-spacing:.42em;color:var(--dim2);
-  margin-bottom:20px;text-transform:uppercase}
-.pre-tri{width:56px;height:56px;margin:0 auto 26px;position:relative}
-.pre-tri i{position:absolute;inset:0;border-radius:50%;
-  border:1px solid currentColor;opacity:.55;
-  animation:preSpin 2.4s var(--ease-io) infinite}
-.pre-tri i:nth-child(1){color:var(--vo2);animation-delay:0s;transform:rotate(0deg) scaleY(.42)}
-.pre-tri i:nth-child(2){color:var(--slp);animation-delay:.18s;transform:rotate(60deg) scaleY(.42)}
-.pre-tri i:nth-child(3){color:var(--gut);animation-delay:.36s;transform:rotate(120deg) scaleY(.42)}
-@keyframes preSpin{0%,100%{opacity:.2}50%{opacity:.9}}
-.pre-bar{height:1px;background:rgba(255,255,255,.1);position:relative;overflow:hidden}
-.pre-bar span{position:absolute;inset:0;width:0%;
-  background:linear-gradient(90deg,var(--vo2),var(--slp),var(--gut));
-  transition:width .4s var(--ease)}
-.pre-pct{margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--dim2)}
-
-/* ═══════════════════════════════════════════════════════════
-   3. CURSOR (pointer:fine only)
-   ═══════════════════════════════════════════════════════════ */
-#cur,#curDot{position:fixed;top:0;left:0;z-index:190;pointer-events:none;
-  border-radius:50%;mix-blend-mode:difference;opacity:0;transition:opacity .3s}
-#cur{width:34px;height:34px;border:1px solid rgba(255,255,255,.65);
-  transition:width .3s var(--ease),height .3s var(--ease),opacity .3s,background .3s}
-#curDot{width:4px;height:4px;background:#fff}
-body.cursor-on #cur,body.cursor-on #curDot{opacity:1}
-body.cur-lg #cur{width:64px;height:64px;background:rgba(255,255,255,.12)}
-@media (pointer:coarse),(prefers-reduced-motion:reduce){#cur,#curDot{display:none}}
-
-/* ═══════════════════════════════════════════════════════════
-   4. SCROLL RAIL + PROGRESS
-   ═══════════════════════════════════════════════════════════ */
-#rail{position:fixed;left:max(14px,env(safe-area-inset-left));top:50%;transform:translateY(-50%);
-  z-index:60;display:flex;flex-direction:column;gap:14px;
-  opacity:0;transition:opacity .6s var(--ease);pointer-events:none}
-#rail.on{opacity:1;pointer-events:auto}
-.rail-i{display:flex;align-items:center;gap:10px;cursor:pointer;color:var(--dim2)}
-.rail-i .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.4;
-  transition:.35s var(--ease)}
-.rail-i .lab{font-family:var(--mono);font-size:9px;letter-spacing:.18em;
-  opacity:0;transform:translateX(-6px);transition:.35s var(--ease);white-space:nowrap}
-.rail-i:hover .lab{opacity:.8;transform:translateX(0)}
-.rail-i.on .dot{opacity:1;transform:scale(1.5);box-shadow:0 0 12px currentColor}
-.rail-i.on .lab{opacity:1;transform:translateX(0)}
-@media(max-width:900px){#rail{display:none}}
-
-#prog{position:fixed;top:0;left:0;height:2px;z-index:80;width:0%;
-  background:linear-gradient(90deg,var(--vo2),var(--slp),var(--gut),var(--xs));
-  box-shadow:0 0 14px rgba(var(--accent-rgb),.6)}
-
-/* ═══════════════════════════════════════════════════════════
-   5. HERO
-   ═══════════════════════════════════════════════════════════ */
-#hero{position:relative;z-index:5;min-height:100svh;display:flex;align-items:center;
-  padding:calc(88px + env(safe-area-inset-top)) var(--pad) 120px}
-#heroIn{max-width:var(--maxw);margin:0 auto;width:100%}
-
-.kicker{display:inline-flex;align-items:center;gap:10px;
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.34em;color:var(--dim2);
-  text-transform:uppercase}
-.kicker::before{content:"";width:28px;height:1px;background:currentColor;opacity:.6}
-
-h1.wordmark{
-  font-size:clamp(64px,15vw,190px);font-weight:700;line-height:.86;letter-spacing:-.045em;
-  margin:22px 0 0;display:flex;flex-wrap:wrap}
-h1.wordmark .ch{display:inline-block;
-  background:linear-gradient(115deg,#fff 0%,#dbe6f5 26%,var(--vo2) 52%,var(--slp) 74%,var(--gut) 96%);
-  background-size:280% 100%;
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  animation:wmFlow 11s ease-in-out infinite;
-  opacity:0;transform:translateY(.42em) rotate(3deg);
-  transition:opacity .9s var(--ease),transform 1.1s var(--ease)}
-.ready h1.wordmark .ch{opacity:1;transform:none}
-@keyframes wmFlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-
-.hero-rule{height:1px;margin:34px 0 26px;max-width:620px;
-  background:linear-gradient(90deg,rgba(255,255,255,.28),transparent);
-  transform:scaleX(0);transform-origin:left;transition:transform 1.2s .35s var(--ease)}
-.ready .hero-rule{transform:scaleX(1)}
-
-.lede{max-width:540px;font-size:clamp(13.5px,1.35vw,15px);color:var(--dim);line-height:2.05;
-  opacity:0;transform:translateY(14px);transition:.9s .45s var(--ease)}
-.ready .lede{opacity:1;transform:none}
-.lede strong{color:var(--txt);font-weight:500}
-
-.hero-axes{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px;
-  opacity:0;transform:translateY(14px);transition:.9s .6s var(--ease)}
-.ready .hero-axes{opacity:1;transform:none}
-.axis-btn{display:inline-flex;align-items:center;gap:9px;
-  padding:9px 17px 9px 13px;border-radius:999px;
-  border:1px solid var(--line);background:rgba(255,255,255,.028);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
-  transition:.32s var(--ease)}
-.axis-btn i{width:7px;height:7px;border-radius:50%;background:currentColor;
-  box-shadow:0 0 10px currentColor;flex:none}
-.axis-btn span{color:var(--dim);transition:color .32s var(--ease)}
-.axis-btn:hover{border-color:rgba(255,255,255,.3);
-  transform:translateY(-2px);background:rgba(255,255,255,.06)}
-.axis-btn:hover span{color:var(--txt)}
-
-.hero-cue{position:absolute;left:var(--pad);bottom:34px;
-  font-family:var(--mono);font-size:9.5px;letter-spacing:.3em;color:var(--dim2);
-  display:flex;align-items:center;gap:11px;
-  opacity:0;transition:.9s .9s var(--ease)}
-.ready .hero-cue{opacity:1}
-.hero-cue .track{width:52px;height:1px;background:rgba(255,255,255,.16);position:relative;overflow:hidden}
-.hero-cue .track::after{content:"";position:absolute;inset:0;width:40%;background:var(--cy);
-  animation:cueRun 2.2s var(--ease-io) infinite}
-@keyframes cueRun{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
-
-/* floating 3D node labels, projected from WebGL */
-#labels{position:fixed;inset:0;z-index:6;pointer-events:none}
-.n-label{position:absolute;transform:translate(-50%,-50%);
-  font-family:var(--mono);font-size:10px;letter-spacing:.2em;
-  padding:5px 11px;border-radius:999px;white-space:nowrap;
-  border:1px solid currentColor;background:rgba(4,6,13,.6);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  opacity:0;transition:opacity .4s var(--ease)}
-.n-label.on{opacity:.92}
-@media(max-width:720px){.n-label{font-size:9px;padding:4px 8px}}
-
-/* ═══════════════════════════════════════════════════════════
-   6. STICKY NAV
-   ═══════════════════════════════════════════════════════════ */
-#nav{position:sticky;top:0;z-index:70;
-  background:linear-gradient(180deg,rgba(4,6,13,.92),rgba(4,6,13,.72));
-  backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);
-  border-bottom:1px solid var(--line-soft)}
-#navIn{max-width:var(--maxw);margin:0 auto;padding:12px var(--pad);
-  display:flex;align-items:center;gap:9px;overflow-x:auto;scrollbar-width:none}
-#navIn::-webkit-scrollbar{display:none}
-.brand{font-size:15px;font-weight:700;letter-spacing:.2em;margin-right:8px;flex:none;
-  background:linear-gradient(100deg,var(--vo2),var(--slp) 55%,var(--gut));
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.chip{flex:none;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
-  padding:7px 14px;border-radius:999px;border:1px solid var(--line);
-  transition:.28s var(--ease)}
-.chip span{color:var(--dim2);transition:color .28s var(--ease)}
-.chip:hover{border-color:rgba(255,255,255,.28)}
-.chip:hover span{color:var(--txt)}
-.chip.on{background:currentColor;border-color:transparent}
-.chip.on span{color:#04060d;font-weight:700}
-.nav-count{margin-left:auto;flex:none;font-family:var(--mono);font-size:9.5px;
-  letter-spacing:.18em;color:var(--dim2);padding-left:14px}
-@media(max-width:720px){.nav-count{display:none}}
-
-/* ═══════════════════════════════════════════════════════════
-   7. SECTIONS
-   ═══════════════════════════════════════════════════════════ */
-main{position:relative;z-index:5}
-section.axis{max-width:var(--maxw);margin:0 auto;padding:clamp(80px,12vh,140px) var(--pad);
-  scroll-margin-top:64px}
-section.axis.hide{display:none}
-
-.shead{position:relative;margin-bottom:22px}
-.snum{font-family:var(--mono);font-size:10.5px;letter-spacing:.28em;color:var(--dim2);
-  display:block;margin-bottom:14px}
-.stitle{font-size:clamp(34px,6.2vw,68px);font-weight:700;line-height:1.02;letter-spacing:-.03em;
-  color:var(--accent);display:flex;flex-wrap:wrap}
-.stitle .ch{display:inline-block;opacity:0;transform:translateY(.5em);
-  transition:opacity .7s var(--ease),transform .8s var(--ease)}
-.in .stitle .ch{opacity:1;transform:none}
-.stitle .sp{width:.3em}
-
-.sglow{position:absolute;left:-12%;top:-45%;width:52vw;max-width:620px;aspect-ratio:1;
-  border-radius:50%;pointer-events:none;z-index:-1;
-  background:radial-gradient(circle,rgba(var(--accent-rgb),.13),transparent 66%);
-  filter:blur(24px);opacity:0;transition:opacity 1.4s var(--ease)}
-.in .sglow{opacity:1}
-
-.sdesc{color:var(--dim);font-size:clamp(13px,1.3vw,14.5px);line-height:2.05;max-width:740px;
-  margin:0 0 30px;opacity:0;transform:translateY(14px);
-  transition:.9s .15s var(--ease)}
-.in .sdesc{opacity:1;transform:none}
-.sdesc strong{color:var(--txt);font-weight:500}
-
-/* filter pills */
-.subrow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px;
-  opacity:0;transform:translateY(12px);transition:.9s .25s var(--ease)}
-.in .subrow{opacity:1;transform:none}
-.pill{font-family:var(--mono);font-size:10px;letter-spacing:.12em;
-  padding:7px 14px;border-radius:999px;
-  border:1px solid rgba(var(--accent-rgb),.28);color:var(--accent);opacity:.62;
-  transition:.28s var(--ease)}
-.pill:hover{opacity:1;transform:translateY(-1px);border-color:rgba(var(--accent-rgb),.6)}
-.pill.on{opacity:1;background:var(--accent);color:#04060d;font-weight:700;border-color:transparent;
-  box-shadow:0 6px 22px rgba(var(--accent-rgb),.3)}
-.pill .n{opacity:.55;margin-left:5px}
-.pill.on .n{opacity:.7}
-
-/* ═══════════════════════════════════════════════════════════
-   8. CARDS
-   ═══════════════════════════════════════════════════════════ */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:16px;
-  transition:opacity .22s ease}
-.grid.swapping{opacity:0}
-
-.card{position:relative;border-radius:18px;padding:24px 24px 20px;
-  border:1px solid var(--line-soft);
-  background:linear-gradient(165deg,rgba(255,255,255,.045),rgba(255,255,255,.014));
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.055), 0 18px 40px -28px rgba(0,0,0,.9);
-  overflow:hidden;isolation:isolate;
-  opacity:0;transform:translateY(26px) scale(.985);
-  transition:opacity .7s var(--ease),transform .7s var(--ease),
-             border-color .35s ease,box-shadow .35s ease}
-.card.in{opacity:1;transform:none}
-
-/* cursor spotlight */
-.card::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;
-  transition:opacity .4s ease;
-  background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),
-    rgba(var(--accent-rgb),.13),transparent 62%)}
-.card:hover::before{opacity:1}
-
-/* left accent spine */
-.card::after{content:"";position:absolute;left:0;top:26px;bottom:26px;width:2px;border-radius:2px;
-  background:linear-gradient(180deg,var(--accent),transparent);
-  opacity:.55;transition:opacity .35s ease,top .45s var(--ease),bottom .45s var(--ease)}
-.card:hover::after{opacity:1;top:16px;bottom:16px}
-
-.card:hover{border-color:rgba(var(--accent-rgb),.32);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),
-             0 26px 60px -30px rgba(0,0,0,1),
-             0 0 0 1px rgba(var(--accent-rgb),.06)}
-
-.meta{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:14px}
-.badge{font-family:var(--mono);font-size:9px;letter-spacing:.15em;padding:4px 9px;border-radius:6px;
-  border:1px solid var(--line);color:var(--dim);white-space:nowrap}
-.badge.lv{background:var(--accent);color:#04060d;font-weight:700;border-color:transparent}
-.date{font-family:var(--mono);font-size:9.5px;color:var(--dim2);margin-left:auto;letter-spacing:.1em}
-
-.card h3{font-size:15.5px;line-height:1.66;font-weight:700;color:var(--txt-strong);
-  letter-spacing:.005em;margin-bottom:11px}
-.card .lead{font-size:12.5px;color:var(--dim);line-height:1.95;margin-bottom:15px;
-  padding-left:12px;border-left:1px solid rgba(var(--accent-rgb),.3)}
-.card ul{list-style:none;margin-bottom:17px}
-.card li{position:relative;padding-left:17px;font-size:12.5px;line-height:1.9;
-  color:#cddef0;margin-bottom:8px}
-.card li::before{content:"";position:absolute;left:1px;top:9.5px;width:5px;height:5px;
-  border-radius:50%;background:var(--accent);opacity:.75}
-.src{border-top:1px solid var(--line-soft);padding-top:13px;
-  font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--dim2);line-height:1.8}
-.src a{color:var(--accent);border-bottom:1px solid transparent;transition:.25s}
-.src a:hover{border-bottom-color:currentColor}
-
-.empty{grid-column:1/-1;padding:44px;text-align:center;border-radius:18px;
-  border:1px dashed var(--line);font-family:var(--mono);font-size:11px;
-  letter-spacing:.2em;color:var(--dim2)}
-
-/* ═══════════════════════════════════════════════════════════
-   9. PRACTICE
-   ═══════════════════════════════════════════════════════════ */
-.practice{position:relative;margin-top:34px;border-radius:18px;padding:28px 30px;
-  border:1px solid rgba(var(--accent-rgb),.24);
-  background:linear-gradient(150deg,rgba(var(--accent-rgb),.055),rgba(255,255,255,.012));
-  overflow:hidden;
-  opacity:0;transform:translateY(20px);transition:.9s var(--ease)}
-.in .practice{opacity:1;transform:none}
-.practice::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.65}
-.practice h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--accent);
-  margin-bottom:18px;display:flex;align-items:center;gap:10px}
-.practice h4::after{content:"";flex:1;height:1px;background:currentColor;opacity:.2}
-.practice ol{list-style:none;counter-reset:p}
-.practice li{counter-increment:p;position:relative;padding-left:38px;
-  font-size:13px;line-height:2;color:#e3ecf7;margin-bottom:12px}
-.practice li:last-child{margin-bottom:0}
-.practice li::before{content:counter(p,decimal-leading-zero);position:absolute;left:0;top:.1em;
-  font-family:var(--mono);font-size:10px;letter-spacing:.06em;
-  color:var(--accent);opacity:.75;font-weight:700}
-
-/* ═══════════════════════════════════════════════════════════
-   10. VENN (交差点)
-   ═══════════════════════════════════════════════════════════ */
-.venn-wrap{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:38px;
-  align-items:center;margin-bottom:36px}
-@media(max-width:880px){.venn-wrap{grid-template-columns:1fr;gap:26px}}
-
-.venn{width:100%;max-width:340px;margin:0 auto;
-  opacity:0;transform:scale(.9);transition:1s var(--ease)}
-.in .venn{opacity:1;transform:none}
-.venn circle.lens{mix-blend-mode:screen;transition:opacity .45s var(--ease)}
-.venn.focus circle.lens{opacity:.16}
-.venn.focus circle.lens.hot{opacity:1}
-.venn text{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em}
-.venn .ringspin{transform-origin:160px 152px;animation:vennSpin 46s linear infinite}
-@keyframes vennSpin{to{transform:rotate(360deg)}}
-
-.venn-list{display:flex;flex-direction:column;gap:12px}
-.vx{position:relative;border-radius:14px;padding:18px 20px;
-  border:1px solid var(--line-soft);background:rgba(255,255,255,.026);
-  transition:.4s var(--ease);
-  opacity:0;transform:translateX(18px)}
-.in .vx{opacity:1;transform:none}
-.in .vx:nth-child(1){transition-delay:.1s}
-.in .vx:nth-child(2){transition-delay:.2s}
-.in .vx:nth-child(3){transition-delay:.3s}
-.vx:hover{background:rgba(255,255,255,.055);transform:translateX(4px)}
-.vx .vt{font-family:var(--mono);font-size:10px;letter-spacing:.18em;margin-bottom:9px;
-  display:flex;align-items:center;gap:8px}
-.vx .vt i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
-.vx p{font-size:12.5px;color:var(--dim);line-height:1.95}
-
-/* ═══════════════════════════════════════════════════════════
-   10.5 ARCHIVE (月別履歴)
-   ═══════════════════════════════════════════════════════════ */
-section.archive{max-width:var(--maxw);margin:0 auto;padding:clamp(80px,12vh,140px) var(--pad);
-  scroll-margin-top:64px}
-
-.arch-grid{position:relative;display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:16px}
-/* timeline spine threaded behind the node row */
-.arch-grid::before{content:"";position:absolute;left:8%;right:8%;top:44px;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(var(--accent-rgb),.5) 18%,
-             rgba(var(--accent-rgb),.5) 82%,transparent);
-  opacity:0;transition:opacity 1.2s .3s var(--ease)}
-.in .arch-grid::before{opacity:1}
-@media(max-width:760px){.arch-grid::before{display:none}}
-
-.mcard{position:relative;width:100%;text-align:left;
-  /* flex column so button content stays top-aligned across unequal card heights */
-  display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
-  border-radius:18px;padding:22px 22px 20px;
-  border:1px solid var(--line-soft);
-  background:linear-gradient(165deg,rgba(255,255,255,.045),rgba(255,255,255,.014));
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.055), 0 18px 40px -28px rgba(0,0,0,.9);
-  overflow:hidden;isolation:isolate;cursor:pointer;
-  opacity:0;transform:translateY(26px) scale(.985);
-  transition:opacity .7s var(--ease),transform .7s var(--ease),
-             border-color .35s ease,box-shadow .35s ease}
-.in .mcard{opacity:1;transform:none}
-
-.mcard::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;
-  transition:opacity .4s ease;
-  background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),
-    rgba(var(--accent-rgb),.14),transparent 62%)}
-.mcard:hover::before{opacity:1}
-.mcard:hover{border-color:rgba(var(--accent-rgb),.34);transform:translateY(-3px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),
-             0 26px 60px -30px rgba(0,0,0,1),
-             0 0 0 1px rgba(var(--accent-rgb),.07)}
-
-.mnode{flex:none;width:13px;height:13px;border-radius:50%;margin-bottom:20px;
-  border:1px solid var(--accent);background:var(--bg);
-  transition:.4s var(--ease)}
-.mcard.latest .mnode{background:var(--accent);
-  box-shadow:0 0 0 4px rgba(var(--accent-rgb),.15), 0 0 18px var(--accent)}
-.mcard:hover .mnode{transform:scale(1.25)}
-
-.mbadge{align-self:flex-start;font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;
-  padding:4px 9px;border-radius:6px;margin-bottom:12px;
-  border:1px solid var(--line);color:var(--dim)}
-.mcard.latest .mbadge{background:var(--accent);color:#04060d;font-weight:700;border-color:transparent}
-
-.mnum{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--dim2)}
-.mtitle{display:block;font-size:25px;font-weight:700;letter-spacing:-.02em;line-height:1.2;
-  color:var(--txt-strong);margin:4px 0 12px}
-.mdesc{display:block;font-size:12.5px;color:var(--dim);line-height:1.92;margin-bottom:17px}
-.mstats{margin-top:auto;display:flex;flex-wrap:wrap;gap:14px;
-  border-top:1px solid var(--line-soft);padding-top:13px;
-  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim2)}
-.mstats b{color:var(--accent);font-weight:400}
-
-.mflash{position:absolute;left:0;right:0;bottom:0;padding:10px;text-align:center;
-  font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;
-  background:rgba(var(--accent-rgb),.16);color:var(--accent);
-  border-top:1px solid rgba(var(--accent-rgb),.3);
-  transform:translateY(101%);transition:transform .45s var(--ease)}
-.mcard.flash .mflash{transform:none}
-
-.arch-note{margin-top:24px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
-  color:var(--dim2);opacity:0;transition:.9s .5s var(--ease)}
-.in .arch-note{opacity:1}
-
-/* ═══════════════════════════════════════════════════════════
-   11. FOOTER
-   ═══════════════════════════════════════════════════════════ */
-footer{position:relative;z-index:5;border-top:1px solid var(--line-soft);
-  margin-top:60px;padding:70px var(--pad) 90px;
-  background:linear-gradient(180deg,transparent,rgba(255,255,255,.014))}
-.fin{max-width:var(--maxw);margin:0 auto}
-.fbrand{font-size:clamp(46px,11vw,120px);font-weight:700;letter-spacing:-.045em;line-height:1;
-  background:linear-gradient(100deg,var(--vo2),var(--slp) 48%,var(--gut) 88%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  margin-bottom:30px;opacity:.9}
-.fnote{font-size:12px;color:var(--dim2);line-height:2.1;max-width:760px}
-.fmotto{display:inline-block;margin-top:26px;font-family:var(--mono);font-size:11px;
-  letter-spacing:.22em;color:var(--dim);
-  padding:9px 18px;border-radius:999px;border:1px solid var(--line)}
-
-/* ═══════════════════════════════════════════════════════════
-   12. MOTION PREFERENCES
-   ═══════════════════════════════════════════════════════════ */
-@media(prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
-    transition-duration:.01ms !important}
-  .card,.sdesc,.subrow,.practice,.vx,.venn,.lede,.hero-axes,.hero-cue,
-  .mcard,.arch-note,h1.wordmark .ch,.stitle .ch{opacity:1 !important;transform:none !important}
-  .hero-rule{transform:scaleX(1) !important}
+body {
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.7;
 }
-</style>
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-gut), var(--color-running), var(--color-sleep));
+  border-radius: 10px;
+}
+
+/* ===== LOADER ===== */
+#loader {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: radial-gradient(ellipse at center, #0a0a1e 0%, var(--bg-color) 100%);
+  z-index: 9999;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  transition: opacity 1s ease-out;
+}
+
+.heartbeat-pulse {
+  width: 80px; height: 80px;
+  background: radial-gradient(circle, var(--color-running) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+  margin-bottom: 24px;
+  filter: blur(1px);
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  20% { transform: scale(1.2); opacity: 1; }
+  40% { transform: scale(0.9); opacity: 0.8; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.5; }
+}
+
+.loader-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 6px;
+  color: var(--color-gut);
+  animation: blink 2s infinite;
+  text-transform: uppercase;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* ===== THREE.JS CANVAS ===== */
+#canvas-container {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: -1; pointer-events: none;
+}
+
+/* ===== TRIANGLE ANIMATED GRADIENT OVERLAY ===== */
+#triangle-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 90;
+  opacity: 0; transition: opacity 0.6s ease;
+}
+
+#triangle-overlay.active {
+  opacity: 1;
+}
+
+.triangle-mesh {
+  position: absolute; top: 50%; left: 50%;
+  width: 120vmax; height: 120vmax;
+  transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(0, 245, 212, 0.25) 0deg,
+    rgba(255, 107, 107, 0.25) 120deg,
+    rgba(123, 97, 255, 0.25) 240deg,
+    rgba(255, 209, 102, 0.25) 300deg,
+    rgba(0, 245, 212, 0.25) 360deg
+  );
+  filter: blur(40px);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: triRotate 12s linear infinite;
+}
+
+#triangle-overlay.active .triangle-mesh {
+  transform: translate(-50%, -50%) scale(1) rotate(180deg);
+}
+
+@keyframes triRotate {
+  0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(360deg); }
+}
+
+/* ===== TOP RIGHT 3D HEART MENU NAV ===== */
+.top-right-nav {
+  position: fixed; top: 24px; right: 24px;
+  z-index: 1000;
+  display: flex; flex-direction: column; align-items: flex-end;
+}
+
+.heart-trigger-btn {
+  position: relative;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(12, 12, 28, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 107, 107, 0.2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.heart-trigger-btn:hover {
+  transform: scale(1.1);
+  border-color: rgba(255, 107, 107, 0.8);
+  box-shadow: 0 12px 40px rgba(255, 107, 107, 0.4);
+}
+
+.heart-icon-3d {
+  font-size: 24px;
+  animation: heartPulse 1.4s infinite ease-in-out;
+  filter: drop-shadow(0 0 10px rgba(255, 107, 107, 0.8));
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.25); }
+  30% { transform: scale(0.95); }
+  45% { transform: scale(1.15); }
+}
+
+.heart-label-badge {
+  position: absolute; right: 68px; top: 50%;
+  transform: translateY(-50%);
+  background: rgba(8, 8, 20, 0.85);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  letter-spacing: 1px;
+  pointer-events: none;
+  opacity: 0; transform: translateY(-50%) translateX(10px);
+  transition: all 0.3s ease;
+}
+
+.heart-trigger-btn:hover .heart-label-badge {
+  opacity: 1; transform: translateY(-50%) translateX(0);
+}
+
+.triangle-menu-panel {
+  margin-top: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+  align-items: flex-end;
+  pointer-events: none;
+  opacity: 0; transform: translateY(-20px) scale(0.9);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.top-right-nav.open .triangle-menu-panel {
+  pointer-events: auto;
+  opacity: 1; transform: translateY(0) scale(1);
+}
+
+.menu-tri-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 18px;
+  border-radius: 30px;
+  background: rgba(12, 12, 28, 0.85);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.menu-tri-item[data-target="gut"] { border-left: 3px solid var(--color-gut); }
+.menu-tri-item[data-target="running"] { border-left: 3px solid var(--color-running); }
+.menu-tri-item[data-target="sleep"] { border-left: 3px solid var(--color-sleep); }
+.menu-tri-item[data-target="archive"] { border-left: 3px solid var(--color-archive); }
+
+.menu-tri-item:hover {
+  transform: translateX(-6px) scale(1.03);
+  background: rgba(20, 20, 45, 0.95);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.menu-tri-item[data-target="gut"]:hover { box-shadow: 0 0 20px rgba(0, 245, 212, 0.3); }
+.menu-tri-item[data-target="running"]:hover { box-shadow: 0 0 20px rgba(255, 107, 107, 0.3); }
+.menu-tri-item[data-target="sleep"]:hover { box-shadow: 0 0 20px rgba(123, 97, 255, 0.3); }
+.menu-tri-item[data-target="archive"]:hover { box-shadow: 0 0 20px rgba(255, 209, 102, 0.3); }
+
+.tri-icon { font-size: 16px; }
+
+.tri-text {
+  font-family: 'Noto Sans JP', 'Inter', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--text-primary);
+}
+
+.menu-tri-item[data-target="gut"] .tri-text { color: var(--color-gut); }
+.menu-tri-item[data-target="running"] .tri-text { color: var(--color-running); }
+.menu-tri-item[data-target="sleep"] .tri-text { color: var(--color-sleep); }
+.menu-tri-item[data-target="archive"] .tri-text { color: var(--color-archive); }
+
+.tri-indicator {
+  width: 0; height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 8px solid currentColor;
+  transform: rotate(90deg);
+}
+
+/* ===== CONTENT ===== */
+.content-wrapper {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto;
+  padding: 40px 20px 140px;
+}
+
+/* ===== HEADER ===== */
+.main-header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-top: 80px;
+  transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hidden { opacity: 0; transform: translateY(30px); }
+.show { opacity: 1; transform: translateY(0); }
+
+.header-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, rgba(0,245,212,0.1), rgba(255,107,107,0.1));
+  color: var(--color-gut);
+  border: 1px solid rgba(0, 245, 212, 0.2);
+  border-radius: 30px;
+  font-size: 11px; font-weight: 700;
+  margin-bottom: 28px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
+.header-title {
+  font-size: 56px; font-weight: 900;
+  line-height: 1.15; margin-bottom: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #c0c0d0 40%, var(--color-gut) 70%, var(--color-sleep) 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: titleGradient 8s ease infinite;
+}
+
+@keyframes titleGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.header-subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.header-meta {
+  display: flex; justify-content: center; gap: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: #555;
+  letter-spacing: 2px;
+}
+
+/* ===== NOTEBOOKLM FEATURED HIGHLIGHT CARD ===== */
+.notebooklm-featured-card {
+  position: relative;
+  margin-bottom: 60px;
+  padding: 36px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(0, 245, 212, 0.08), rgba(12, 12, 35, 0.85));
+  border: 1px solid rgba(0, 245, 212, 0.3);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 12px 48px rgba(0, 245, 212, 0.15);
+  overflow: hidden;
+  transition: transform 0.4s ease;
+}
+
+.notebooklm-featured-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 245, 212, 0.6);
+}
+
+.notebooklm-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px;
+  background: rgba(0, 245, 212, 0.15);
+  border: 1px solid rgba(0, 245, 212, 0.4);
+  color: var(--color-gut);
+  border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+
+.notebooklm-title {
+  font-size: 26px; font-weight: 900;
+  color: #fff; margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.notebooklm-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px; margin-top: 20px;
+}
+
+.notebooklm-subbox {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.notebooklm-subbox h4 {
+  font-size: 15px; font-weight: 800;
+  color: var(--color-gut); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.notebooklm-subbox p {
+  font-size: 13px; color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ===== 3D MONTHLY ARCHIVE SECTION ===== */
+.archive-section {
+  margin-bottom: 100px;
+  opacity: 0; transform: translateY(50px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  scroll-margin-top: 60px;
+}
+.archive-section.visible { opacity: 1; transform: translateY(0); }
+
+.archive-header {
+  position: relative;
+  display: flex; align-items: center; gap: 24px;
+  margin-bottom: 40px;
+  padding: 24px 32px;
+  border-radius: 20px;
+  background: rgba(255, 209, 102, 0.03);
+  border: 1px solid rgba(255, 209, 102, 0.12);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 30px rgba(255, 209, 102, 0.04);
+}
+
+.archive-header::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-archive), transparent);
+}
+
+.archive-title {
+  font-size: 26px; font-weight: 900;
+  color: var(--color-archive);
+  letter-spacing: 1px;
+}
+
+.archive-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 2px;
+}
+
+.archive-timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.month-3d-card {
+  position: relative;
+  border-radius: 16px;
+  background: rgba(18, 18, 38, 0.7);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 24px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.month-3d-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(circle at top right, rgba(255, 209, 102, 0.1), transparent 60%);
+  opacity: 0; transition: opacity 0.4s ease;
+}
+
+.month-3d-card:hover {
+  transform: translateY(-8px) rotateX(4deg) rotateY(-4deg) scale(1.02);
+  border-color: rgba(255, 209, 102, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 209, 102, 0.15);
+}
+
+.month-3d-card:hover::before { opacity: 1; }
+
+.month-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 209, 102, 0.1);
+  border: 1px solid rgba(255, 209, 102, 0.3);
+  color: var(--color-archive);
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.month-title {
+  font-size: 20px; font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.month-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.month-stats-row {
+  display: flex; gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--color-archive);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 12px;
+}
+
+.month-action-btn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255, 209, 102, 0.08);
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  color: var(--color-archive);
+  font-size: 11px; font-weight: 700;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.month-3d-card:hover .month-action-btn {
+  background: var(--color-archive);
+  color: #000;
+  box-shadow: 0 0 15px rgba(255, 209, 102, 0.4);
+}
+
+/* ===== GENRE SECTION — PREMIUM 3D HEADERS ===== */
+.genre-section {
+  margin-bottom: 100px;
+  opacity: 0; transform: translateY(50px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  scroll-margin-top: 60px;
+}
+.genre-section.visible { opacity: 1; transform: translateY(0); }
+
+.genre-header {
+  position: relative;
+  display: flex; align-items: center; gap: 24px;
+  margin-bottom: 48px;
+  padding: 28px 36px;
+  border-radius: 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.genre-header:hover {
+  transform: translateY(-3px);
+}
+
+.genre-header::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 3px;
+  background-size: 200% 100%;
+  animation: borderFlow 4s ease infinite;
+}
+
+@keyframes borderFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.genre-header::after {
+  content: '';
+  position: absolute; left: 36px; top: 50%;
+  transform: translateY(-50%);
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.15;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.genre-header:hover::after { opacity: 0.3; }
+
+.genre-section[data-genre="gut"] .genre-header::before {
+  background: linear-gradient(90deg, transparent, var(--color-gut), transparent);
+  background-size: 200% 100%;
+}
+.genre-section[data-genre="gut"] .genre-header::after { background: var(--color-gut); }
+.genre-section[data-genre="gut"] .genre-header {
+  border-color: rgba(0, 245, 212, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 245, 212, 0.04);
+}
+.genre-section[data-genre="gut"] .genre-header:hover {
+  box-shadow: 0 8px 40px rgba(0, 245, 212, 0.1), 0 0 0 1px rgba(0, 245, 212, 0.15);
+}
+
+.genre-section[data-genre="running"] .genre-header::before {
+  background: linear-gradient(90deg, transparent, var(--color-running), transparent);
+  background-size: 200% 100%;
+}
+.genre-section[data-genre="running"] .genre-header::after { background: var(--color-running); }
+.genre-section[data-genre="running"] .genre-header {
+  border-color: rgba(255, 107, 107, 0.1);
+  box-shadow: 0 4px 30px rgba(255, 107, 107, 0.04);
+}
+.genre-section[data-genre="running"] .genre-header:hover {
+  box-shadow: 0 8px 40px rgba(255, 107, 107, 0.1), 0 0 0 1px rgba(255, 107, 107, 0.15);
+}
+
+.genre-section[data-genre="sleep"] .genre-header::before {
+  background: linear-gradient(90deg, transparent, var(--color-sleep), transparent);
+  background-size: 200% 100%;
+}
+.genre-section[data-genre="sleep"] .genre-header::after { background: var(--color-sleep); }
+.genre-section[data-genre="sleep"] .genre-header {
+  border-color: rgba(123, 97, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(123, 97, 255, 0.04);
+}
+.genre-section[data-genre="sleep"] .genre-header:hover {
+  box-shadow: 0 8px 40px rgba(123, 97, 255, 0.1), 0 0 0 1px rgba(123, 97, 255, 0.15);
+}
+
+.genre-icon-wrapper {
+  position: relative;
+  width: 64px; height: 64px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  z-index: 1;
+  animation: iconFloat 4s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-4px) rotate(2deg); }
+  75% { transform: translateY(3px) rotate(-1deg); }
+}
+
+.genre-section[data-genre="gut"] .genre-icon-wrapper {
+  background: linear-gradient(135deg, rgba(0,245,212,0.2), rgba(0,245,212,0.05));
+  border: 1.5px solid rgba(0,245,212,0.3);
+  box-shadow: 0 0 30px rgba(0,245,212,0.15), inset 0 0 20px rgba(0,245,212,0.1);
+}
+.genre-section[data-genre="running"] .genre-icon-wrapper {
+  background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(255,107,107,0.05));
+  border: 1.5px solid rgba(255,107,107,0.3);
+  box-shadow: 0 0 30px rgba(255,107,107,0.15), inset 0 0 20px rgba(255,107,107,0.1);
+}
+.genre-section[data-genre="sleep"] .genre-icon-wrapper {
+  background: linear-gradient(135deg, rgba(123,97,255,0.2), rgba(123,97,255,0.05));
+  border: 1.5px solid rgba(123,97,255,0.3);
+  box-shadow: 0 0 30px rgba(123,97,255,0.15), inset 0 0 20px rgba(123,97,255,0.1);
+}
+
+.genre-icon {
+  font-size: 28px;
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
+}
+
+.genre-title-block { z-index: 1; flex-grow: 1; }
+
+.genre-title {
+  font-size: 28px; font-weight: 900;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.genre-section[data-genre="gut"] .genre-title { color: var(--color-gut); }
+.genre-section[data-genre="running"] .genre-title { color: var(--color-running); }
+.genre-section[data-genre="sleep"] .genre-title { color: var(--color-sleep); }
+
+.genre-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.genre-stats {
+  display: flex; gap: 10px;
+  z-index: 1;
+}
+
+.genre-stat-pill {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  min-width: 70px;
+}
+
+.genre-stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px; font-weight: 800;
+}
+.genre-section[data-genre="gut"] .genre-stat-value { color: var(--color-gut); }
+.genre-section[data-genre="running"] .genre-stat-value { color: var(--color-running); }
+.genre-section[data-genre="sleep"] .genre-stat-value { color: var(--color-sleep); }
+
+.genre-stat-label {
+  font-size: 9px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== NEWS CARDS ===== */
+.genre-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.news-card {
+  position: relative;
+  opacity: 0; transform: translateY(60px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 16px;
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.news-card.visible { opacity: 1; transform: translateY(0); }
+
+.news-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 16px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.news-card[data-genre="gut"]::before {
+  background: radial-gradient(ellipse at top left, rgba(0,245,212,0.06), transparent 60%);
+}
+.news-card[data-genre="running"]::before {
+  background: radial-gradient(ellipse at top left, rgba(255,107,107,0.06), transparent 60%);
+}
+.news-card[data-genre="sleep"]::before {
+  background: radial-gradient(ellipse at top left, rgba(123,97,255,0.06), transparent 60%);
+}
+
+.news-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.news-card:hover::before { opacity: 1; }
+
+.news-card[data-genre="gut"]:hover {
+  box-shadow: 0 12px 40px rgba(0,245,212,0.08);
+}
+.news-card[data-genre="running"]:hover {
+  box-shadow: 0 12px 40px rgba(255,107,107,0.08);
+}
+.news-card[data-genre="sleep"]:hover {
+  box-shadow: 0 12px 40px rgba(123,97,255,0.08);
+}
+
+.card-inner {
+  padding: 28px;
+  position: relative; z-index: 2;
+  flex-grow: 1;
+  display: flex; flex-direction: column;
+}
+
+.card-glow {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 3px; z-index: 3;
+}
+.news-card[data-genre="gut"] .card-glow {
+  background: linear-gradient(90deg, var(--color-gut), transparent);
+}
+.news-card[data-genre="running"] .card-glow {
+  background: linear-gradient(90deg, var(--color-running), transparent);
+}
+.news-card[data-genre="sleep"] .card-glow {
+  background: linear-gradient(90deg, var(--color-sleep), transparent);
+}
+
+.card-rank {
+  position: absolute; top: 16px; right: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px; font-weight: 900;
+  opacity: 0.06; line-height: 1; z-index: 0;
+}
+
+.card-category {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 20px;
+  font-size: 10px; font-weight: 700;
+  margin-bottom: 14px;
+  width: fit-content;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.news-card[data-genre="gut"] .card-category { color: var(--color-gut); border: 1px solid rgba(0,245,212,0.15); }
+.news-card[data-genre="running"] .card-category { color: var(--color-running); border: 1px solid rgba(255,107,107,0.15); }
+.news-card[data-genre="sleep"] .card-category { color: var(--color-sleep); border: 1px solid rgba(123,97,255,0.15); }
+
+.card-title {
+  font-size: 17px; font-weight: 800;
+  margin-bottom: 14px; line-height: 1.5;
+  letter-spacing: 0.3px;
+}
+
+.card-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  flex-grow: 1;
+  line-height: 1.8;
+}
+.card-body strong { color: var(--text-primary); font-weight: 700; }
+
+.card-kpi-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.kpi-item {
+  display: flex; flex-direction: column;
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+}
+
+.kpi-value {
+  font-size: 12px; font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 2px;
+}
+.kpi-label {
+  font-size: 9px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.news-card[data-genre="gut"] .kpi-value { color: var(--color-gut); }
+.news-card[data-genre="running"] .kpi-value { color: var(--color-running); }
+.news-card[data-genre="sleep"] .kpi-value { color: var(--color-sleep); }
+
+.card-action {
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  padding: 14px 16px;
+  border-radius: 10px;
+  display: flex; gap: 10px;
+  margin-bottom: 16px;
+  font-size: 12px; line-height: 1.6;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.action-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+
+.card-source {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: #444;
+  display: flex; justify-content: space-between;
+  letter-spacing: 0.5px;
+}
+
+/* ===== FOOTER ===== */
+.main-footer {
+  text-align: center; padding: 60px 0 40px;
+  font-size: 11px; color: #444;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 2px;
+  transition: opacity 1s ease;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .header-title { font-size: 36px; }
+  .genre-cards { grid-template-columns: 1fr; }
+  .genre-header { padding: 20px 24px; flex-wrap: wrap; gap: 16px; }
+  .genre-stats { width: 100%; justify-content: center; }
+  .genre-icon-wrapper { width: 48px; height: 48px; }
+  .genre-icon { font-size: 22px; }
+  .genre-title { font-size: 22px; }
+  .top-right-nav { top: 16px; right: 16px; }
+  .heart-trigger-btn { width: 48px; height: 48px; }
+  .heart-icon-3d { font-size: 20px; }
+  .archive-timeline-grid { grid-template-columns: 1fr; }
+  .notebooklm-featured-card { padding: 24px; }
+}
+
+@media (max-width: 480px) {
+  .header-title { font-size: 28px; }
+  .genre-stats { display: none; }
+  .content-wrapper { padding: 20px 12px 140px; }
+  .card-inner { padding: 20px; }
+}
+  </style>
 </head>
 <body>
-
-<!-- ══════════ PRELOADER ══════════ -->
-<div id="pre">
-  <div class="pre-in">
-    <div class="pre-tri"><i></i><i></i><i></i></div>
-    <div class="pre-mark">TRIAXIS</div>
-    <div class="pre-bar"><span id="preBar"></span></div>
-    <div class="pre-pct" id="prePct">0%</div>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="heartbeat-pulse"></div>
+    <div class="loader-text">SYNCING VITALS...</div>
   </div>
-</div>
 
-<!-- ══════════ BACKDROP ══════════ -->
-<div id="aura"></div>
-<div id="bg"></div>
-<div id="vignette"></div>
-<div id="grain"></div>
-<div id="labels"></div>
+  <!-- Three.js Canvas Container -->
+  <div id="canvas-container"></div>
 
-<div id="cur"></div><div id="curDot"></div>
-<div id="prog"></div>
-
-<nav id="rail" aria-label="セクション">
-  <a class="rail-i" href="#vo2" style="color:#ff7a29"><span class="dot"></span><span class="lab">VO2MAX</span></a>
-  <a class="rail-i" href="#slp" style="color:#a78bfa"><span class="dot"></span><span class="lab">SLEEP</span></a>
-  <a class="rail-i" href="#gut" style="color:#34d399"><span class="dot"></span><span class="lab">GUT</span></a>
-  <a class="rail-i" href="#xs"  style="color:#f5c542"><span class="dot"></span><span class="lab">交差点</span></a>
-  <a class="rail-i" href="#archive" style="color:#22d3ee"><span class="dot"></span><span class="lab">ARCHIVE</span></a>
-</nav>
-
-<!-- ══════════ HERO ══════════ -->
-<header id="hero">
-  <div id="heroIn">
-    <div class="kicker">Personal Research Hub / 2026</div>
-    <h1 class="wordmark" id="wordmark" aria-label="TRIAXIS">TRIAXIS</h1>
-    <div class="hero-rule"></div>
-    <p class="lede">
-      <strong>VO2MAX向上 × 睡眠 × 腸活。</strong>3つの軸と、その交差点にある研究をジャンル別に構造化する。
-      すべての項目に出典・発表機関・日付を付す。
-    </p>
-    <div class="hero-axes">
-      <button class="axis-btn" data-go="vo2" style="color:#ff7a29"><i></i><span>VO2MAX</span></button>
-      <button class="axis-btn" data-go="slp" style="color:#a78bfa"><i></i><span>SLEEP</span></button>
-      <button class="axis-btn" data-go="gut" style="color:#34d399"><i></i><span>GUT</span></button>
-      <button class="axis-btn" data-go="xs"  style="color:#f5c542"><i></i><span>交差点</span></button>
-    </div>
+  <!-- Triangle Gradient Overlay -->
+  <div id="triangle-overlay">
+    <div class="triangle-mesh"></div>
   </div>
-  <div class="hero-cue"><span class="track"></span>SCROLL / 球体のノードをクリック</div>
-</header>
 
-<!-- ══════════ NAV ══════════ -->
-<nav id="nav"><div id="navIn">
-  <a href="#hero" class="brand">TRIAXIS</a>
-  <button class="chip on" data-f="all" style="color:#eaf2ff"><span>ALL</span></button>
-  <button class="chip" data-f="vo2" style="color:#ff7a29"><span>VO2MAX</span></button>
-  <button class="chip" data-f="slp" style="color:#a78bfa"><span>SLEEP</span></button>
-  <button class="chip" data-f="gut" style="color:#34d399"><span>GUT</span></button>
-  <button class="chip" data-f="xs"  style="color:#f5c542"><span>交差点</span></button>
-  <button class="chip" data-jump="archive" style="color:#22d3ee"><span>ARCHIVE ↓</span></button>
-  <span class="nav-count" id="navCount"></span>
-</div></nav>
-
-<main>
-
-  <section class="axis" id="vo2" data-ax="vo2">
-    <div class="shead">
-      <div class="sglow"></div>
-      <span class="snum">01 / AXIS</span>
-      <h2 class="stitle" data-text="VO2MAX 向上"></h2>
+  <!-- Top-Right 3D Heart Menu Navigation -->
+  <nav class="top-right-nav" id="top-right-nav">
+    <div class="heart-trigger-btn" id="heart-btn">
+      <span class="heart-icon-3d">❤️</span>
+      <div class="heart-label-badge">TRIAXIS 3D MENU</div>
     </div>
-    <p class="sdesc">最大酸素摂取量はパフォーマンスの天井であると同時に、全死因死亡の強い予測因子でもある。
-      <strong>処方 / 量 / 測定 / 耐久性 / 健康寿命</strong> のジャンルに分けて整理する。</p>
-    <div class="subrow" id="s-vo2"></div>
-    <div class="grid" id="g-vo2"></div>
-    <div class="practice"><h4>PRACTICE — 明日から回せる形</h4><ol>
-      <li>週1本の4×4（4分×4本／90〜95%HRmax、レスト3分）を「VO2max刺激枠」として固定する。増やさない。</li>
-      <li>残りは低強度で距離を積む。データ上、走行距離とVO2maxの関係にプラトーは観測されていない。</li>
-      <li>ウォッチのVO2max推定値は絶対値ではなく、同一デバイス内のトレンドとしてのみ読む。</li>
-      <li>疲労下の指標（90分走後のペース維持率）を月1で測る。フレッシュな数値だけを追わない。</li>
-    </ol></div>
-  </section>
-
-  <section class="axis" id="slp" data-ax="slp">
-    <div class="shead">
-      <div class="sglow"></div>
-      <span class="snum">02 / AXIS</span>
-      <h2 class="stitle" data-text="睡眠"></h2>
-    </div>
-    <p class="sdesc">睡眠は回復手段ではなく、トレーニング適応そのものを成立させる前提条件。
-      <strong>パフォーマンス / メカニズム / 概日リズム / 計測</strong> のジャンルで見る。</p>
-    <div class="subrow" id="s-slp"></div>
-    <div class="grid" id="g-slp"></div>
-    <div class="practice"><h4>PRACTICE — 明日から回せる形</h4><ol>
-      <li>「7時間」を下限ラインとして固定。それ以下が続く週は、強度練を1本削る判断に直結させる。</li>
-      <li>レース1週間前は就寝を55〜60分前倒し。当日だけ早く寝ても効果は薄い。</li>
-      <li>寝室17〜19℃。深部体温が約1℃下がることが入眠のスイッチになる。</li>
-      <li>夜練の日は終了後の光曝露と刺激を落とす。クロノタイプに合わない時刻設計は適応を削る。</li>
-    </ol></div>
-  </section>
-
-  <section class="axis" id="gut" data-ax="gut">
-    <div class="shead">
-      <div class="sglow"></div>
-      <span class="snum">03 / AXIS</span>
-      <h2 class="stitle" data-text="腸活"></h2>
-    </div>
-    <p class="sdesc">腸内環境はエネルギー基質・バリア機能・免疫・全身の炎症レベルを決める変数。
-      <strong>運動×腸 / バリア機能 / レース補給 / 次世代成分 / 食事設計</strong> に分ける。</p>
-    <div class="subrow" id="s-gut"></div>
-    <div class="grid" id="g-gut"></div>
-    <div class="practice"><h4>PRACTICE — 明日から回せる形</h4><ol>
-      <li>ロング走を補給の練習として使う。60 → 75 → 90 g/h と段階的に上げ、いきなり120g/hを狙わない。</li>
-      <li>60g/hを超える日はグルコース：フルクトース＝1:0.8前後のブレンドを選ぶ。</li>
-      <li>食物繊維は多様性で摂る。効果は一過性で、練習と同じく止めれば戻る。</li>
-      <li>減量期・移動期はバリア機能が落ちやすい局面。この時期に補給の新規実験を持ち込まない。</li>
-    </ol></div>
-  </section>
-
-  <section class="axis" id="xs" data-ax="xs">
-    <div class="shead">
-      <div class="sglow"></div>
-      <span class="snum">04 / CORE</span>
-      <h2 class="stitle" data-text="交差点"></h2>
-    </div>
-    <p class="sdesc">このサイトの本題。3軸は独立していない。腸内細菌は睡眠を、睡眠はトレーニング適応を、
-      トレーニングは腸内細菌を動かす。現時点で言えることと言えないことを分けて置く。</p>
-
-    <div class="venn-wrap">
-      <svg class="venn" id="venn" viewBox="0 0 320 300" role="img" aria-label="3軸の交差を示すベン図">
-        <g class="ringspin">
-          <circle cx="160" cy="152" r="132" fill="none" stroke="rgba(255,255,255,.20)"
-                  stroke-width="1" stroke-dasharray="3 9"/>
-        </g>
-        <circle class="lens" data-ax="vo2" cx="160" cy="112" r="84" fill="rgba(255,122,41,.32)"
-                stroke="rgba(255,122,41,.75)" stroke-width="1"/>
-        <circle class="lens" data-ax="slp" cx="205" cy="188" r="84" fill="rgba(167,139,250,.32)"
-                stroke="rgba(167,139,250,.75)" stroke-width="1"/>
-        <circle class="lens" data-ax="gut" cx="115" cy="188" r="84" fill="rgba(52,211,153,.32)"
-                stroke="rgba(52,211,153,.75)" stroke-width="1"/>
-        <text x="160" y="26"  fill="#ff7a29" text-anchor="middle">VO2MAX</text>
-        <text x="300" y="288" fill="#a78bfa" text-anchor="end">SLEEP</text>
-        <text x="20"  y="288" fill="#34d399" text-anchor="start">GUT</text>
-        <circle cx="160" cy="152" r="4" fill="#f5c542"/>
-      </svg>
-
-      <div class="venn-list">
-        <div class="vx" data-pair="gut slp" tabindex="0"><div class="vt" style="color:#a78bfa"><i></i>GUT × SLEEP</div>
-          <p>最もエビデンスが厚い重なり。ただし「主観的睡眠は改善、客観指標は不確実」という非対称が繰り返し報告されている。</p></div>
-        <div class="vx" data-pair="gut vo2" tabindex="0"><div class="vt" style="color:#ff7a29"><i></i>GUT × VO2MAX</div>
-          <p>短鎖脂肪酸と乳酸代謝を介した経路。機序は魅力的だが、ヒトでの因果はまだ弱い。期待値の置き方に注意が要る領域。</p></div>
-        <div class="vx" data-pair="slp vo2" tabindex="0"><div class="vt" style="color:#22d3ee"><i></i>SLEEP × VO2MAX</div>
-          <p>睡眠不足はVO2maxそのものより「疲労下で数値を守る力」を削る可能性。デュラビリティと接続して考える。</p></div>
+    
+    <div class="triangle-menu-panel">
+      <div class="menu-tri-item" data-target="gut">
+        <span class="tri-icon">💎</span>
+        <span class="tri-text">🍽️ 食事・ガットトレ</span>
+        <span class="tri-indicator"></span>
+      </div>
+      <div class="menu-tri-item" data-target="running">
+        <span class="tri-icon">⚡</span>
+        <span class="tri-text">🏃 VO2Max向上</span>
+        <span class="tri-indicator"></span>
+      </div>
+      <div class="menu-tri-item" data-target="sleep">
+        <span class="tri-icon">🔮</span>
+        <span class="tri-text">😴 睡眠・回復</span>
+        <span class="tri-indicator"></span>
+      </div>
+      <div class="menu-tri-item" data-target="archive">
+        <span class="tri-icon">📜</span>
+        <span class="tri-text">月別履歴アーカイブ</span>
+        <span class="tri-indicator"></span>
       </div>
     </div>
+  </nav>
 
-    <div class="subrow" id="s-xs"></div>
-    <div class="grid" id="g-xs"></div>
-    <div class="practice"><h4>PRACTICE — 3軸を1つのループにする</h4><ol>
-      <li>週の起点を睡眠に置く。睡眠が崩れた週は、強度ではなく量を残す（適応が乗らないため）。</li>
-      <li>高強度期は腸のバリアが緩みやすい局面。同じ週に補給の新規実験を重ねない。</li>
-      <li>プロバイオティクスは睡眠の質目的なら期待値小〜中、消化器症状の予防目的なら現実的。目的を分けて使う。</li>
-      <li>3つとも効果は一過性で可逆。単発の介入ではなく、止めない仕組みを設計する。</li>
-    </ol></div>
-  </section>
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <header class="main-header hidden">
+      <div class="header-badge">🧬 TRIAXIS 3D RESEARCH HUB</div>
+      <h1 class="header-title">最先端ヘルスケア<br>ニュース & ガットトレ</h1>
+      <p class="header-subtitle">2026年8月3日 日次レポート — NotebookLM Gut Training Deep Research</p>
+      <div class="header-meta">
+        <span class="meta-date">2026.08.03</span>
+        <span class="meta-brand">MASH Health</span>
+      </div>
+    </header>
 
-  <section class="archive" id="archive">
-    <div class="shead">
-      <div class="sglow"></div>
-      <span class="snum">05 / ARCHIVE</span>
-      <h2 class="stitle" data-text="月別履歴アーカイブ"></h2>
-    </div>
-    <p class="sdesc">日次ブリーフの蓄積を、月単位のノードとして辿る。
-      <strong>Monthly Research History Node</strong></p>
-    <div class="arch-grid" id="archGrid"></div>
-    <p class="arch-note">※ 各月のアーカイブページは準備中です。</p>
-  </section>
+    <main class="news-container">
 
-</main>
+      <!-- SPECIAL NOTEBOOKLM FEATURED CARD: GUT TRAINING DEEP RESEARCH -->
+      <section class="notebooklm-featured-card">
+        <div class="notebooklm-badge">🤖 NotebookLM Deep Research Special</div>
+        <h2 class="notebooklm-title">腸内細菌叢×持久力向上「ガットトレーニング（Gut Training）」完全解説</h2>
+        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.8;">
+          70件の科学論文・慶應大・青山学院大（Science Advances掲載）の研究に基づくNotebookLMディープリサーチ結果。特定腸内細菌<em>Bacteroides uniformis</em>と水溶性食物繊維（α-シクロデキストリン）による消化管＆エネルギー適応の統合メカニズム。
+        </p>
+        
+        <div class="notebooklm-grid">
+          <div class="notebooklm-subbox">
+            <h4>🏃 1. B. uniformis 菌と短鎖脂肪酸</h4>
+            <p>
+              青山学院大学長距離選手の研究で同定。<em>B. uniformis</em>が短鎖脂肪酸（酢酸・プロピオン酸）を産生し、肝臓での糖新生を促進。10kmタイムを有意に短縮し疲労感を軽減。
+            </p>
+          </div>
+          <div class="notebooklm-subbox">
+            <h4>🧪 2. α-シクロデキストリン（8週間介入）</h4>
+            <p>
+              環状オリゴ糖であるα-シクロデキストリン（8週間摂取）が<em>B. uniformis</em>の専用栄養源となり、腸内細菌叢を持久力最適化型へと再構築。
+            </p>
+          </div>
+          <div class="notebooklm-subbox">
+            <h4>🛡️ 3. 消化管バリア＆ランナー下痢防衛</h4>
+            <p>
+              高強度走行時の内臓血流低下によるリーキーガット・ランナー下痢を防止。高タンパク食に伴うアンモニア・硫化水素毒性をプロバイオティクスで中和。
+            </p>
+          </div>
+        </div>
+      </section>
 
-<footer>
-  <div class="fin">
-    <div class="fbrand">TRIAXIS</div>
-    <p class="fnote">
-      本サイトは個人が学習・整理目的で公開しているリサーチノートです。各項目は原著論文・学術誌・公的機関の発表を出典として明記していますが、
-      要約は運営者による解釈を含みます。医療行為の代替にはなりません。体調・持病・服薬がある場合は必ず医師に相談してください。<br>
-      掲載研究には査読済み論文、システマティックレビュー／メタ解析、コホート研究、報道記事が混在します。エビデンスの強さはカード左上のバッジで表示しています。
-    </p>
-    <span class="fmotto">意志力ではなく、仕組みで変える。</span>
+      <!-- 3D MONTHLY ARCHIVE SECTION -->
+      <section class="archive-section" id="section-archive" data-genre="archive">
+        <div class="archive-header">
+          <span class="genre-icon" style="font-size:32px;">📜</span>
+          <div class="archive-title-block">
+            <h2 class="archive-title">月別履歴アーカイブ</h2>
+            <p class="archive-subtitle">Monthly 3D Research History Node</p>
+          </div>
+        </div>
+        
+        <div class="archive-timeline-grid">
+          <!-- Month Node 1: 2026.08 -->
+          <div class="month-3d-card" data-month="202608">
+            <div class="month-badge">LATEST BRIEF</div>
+            <h3 class="month-title">2026年8月</h3>
+            <p class="month-desc">NotebookLMガットトレ特集・ウロリチンA・ヒルリピート走・体調下降勾配など最新10件。</p>
+            <div class="month-stats-row">
+              <span>📄 10 Reports</span>
+              <span>⚡ Active</span>
+            </div>
+            <div class="month-action-btn">現在表示中</div>
+          </div>
+
+          <!-- Month Node 2: 2026.07 -->
+          <div class="month-3d-card" data-month="202607">
+            <div class="month-badge">ARCHIVE</div>
+            <h3 class="month-title">2026年7月</h3>
+            <p class="month-desc">TMAOと心房細動、HIIT/SITメタ分析、DLMO精密クロノセラピーなど月間TOP30選。</p>
+            <div class="month-stats-row">
+              <span>📄 30 Reports</span>
+              <span>📦 Archived</span>
+            </div>
+            <div class="month-action-btn">7月アーカイブを見る</div>
+          </div>
+
+          <!-- Month Node 3: 2026.06 -->
+          <div class="month-3d-card" data-month="202606">
+            <div class="month-badge">ARCHIVE</div>
+            <h3 class="month-title">2026年6月</h3>
+            <p class="month-desc">ゾーン2代謝効率、ミトコンドリア密度向上、スマートリングHRV相関分析。</p>
+            <div class="month-stats-row">
+              <span>📄 25 Reports</span>
+              <span>📦 Archived</span>
+            </div>
+            <div class="month-action-btn">6月アーカイブを見る</div>
+          </div>
+
+          <!-- Month Node 4: 2026.05 -->
+          <div class="month-3d-card" data-month="202605">
+            <div class="month-badge">ARCHIVE</div>
+            <h3 class="month-title">2026年5月</h3>
+            <p class="month-desc">長寿遺伝子NAD+ブースター、暑熱順化プロトコル、腸内フローラ初期研究。</p>
+            <div class="month-stats-row">
+              <span>📄 20 Reports</span>
+              <span>📦 Archived</span>
+            </div>
+            <div class="month-action-btn">5月アーカイブを見る</div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- GENRE 1: Gut -->
+      <section class="genre-section" id="section-gut" data-genre="gut">
+        <div class="genre-header">
+          <div class="genre-icon-wrapper">
+            <span class="genre-icon">🍽️</span>
+          </div>
+          <div class="genre-title-block">
+            <h2 class="genre-title">食事・腸内環境（ガットトレーニング）</h2>
+            <p class="genre-subtitle">3 articles · gut microbiome & endurance</p>
+          </div>
+          <div class="genre-stats">
+            <div class="genre-stat-pill">
+              <span class="genre-stat-value">03</span>
+              <span class="genre-stat-label">Articles</span>
+            </div>
+            <div class="genre-stat-pill">
+              <span class="genre-stat-value">3+</span>
+              <span class="genre-stat-label">Sources</span>
+            </div>
+          </div>
+        </div>
+        <div class="genre-cards">
+          <!-- Card 1 -->
+          <article class="news-card" data-index="1" data-genre="gut">
+            <div class="card-glow"></div>
+            <div class="card-inner">
+              <div class="card-rank"><span class="rank-number">01</span></div>
+              <div class="card-category"><span class="cat-icon">🍇</span><span class="cat-label">MITOPHAGY</span></div>
+              <h2 class="card-title">腸内ウロリチンA（Urolithin A）産生能とミトコンドリア・マイトファジー活性化</h2>
+              <p class="card-body">EPFLスイス連邦工科大。腸内細菌がエラジタンニンから変換する<strong>ウロリチンA</strong>が、加齢筋の古いミトコンドリアを分解する「マイトファジー」を強力促進。</p>
+              <div class="card-kpi-row">
+                <div class="kpi-item"><span class="kpi-value">マイトファジー</span><span class="kpi-label">活性化</span></div>
+                <div class="kpi-item"><span class="kpi-value">ウロリチンA</span><span class="kpi-label">代謝物</span></div>
+                <div class="kpi-item"><span class="kpi-value">筋再生</span><span class="kpi-label">ミトコンドリア</span></div>
+              </div>
+              <div class="card-action"><span class="action-icon">🏃</span><span class="action-text">夕食にミックスベリーやクルミを追加し、腸内ウロリチンA産生を活性化してポイント走後の脚の細胞回復をブースト。</span></div>
+              <div class="card-source"><span>📄 EPFL / Nat Metab (2026.08)</span></div>
+            </div>
+          </article>
+          <!-- Card 2 -->
+          <article class="news-card" data-index="2" data-genre="gut">
+            <div class="card-glow"></div>
+            <div class="card-inner">
+              <div class="card-rank"><span class="rank-number">02</span></div>
+              <div class="card-category"><span class="cat-icon">🥗</span><span class="cat-label">NITRATE NET</span></div>
+              <h2 class="card-title">食事性硝酸塩（Nitrate）と腸内細菌口内・腸管変換ネットワークによる局所血流増加</h2>
+              <p class="card-body">エクセター大。野菜由来の無機硝酸塩が口内・腸内フローラにより<strong>亜硝酸塩（NO2-）へ還元</strong>され、運動中の低酸素筋（遅筋）へ優先血流供給。</p>
+              <div class="card-kpi-row">
+                <div class="kpi-item"><span class="kpi-value">NO2-還元</span><span class="kpi-label">局所血流</span></div>
+                <div class="kpi-item"><span class="kpi-value">硝酸塩ネット</span><span class="kpi-label">口内腸内</span></div>
+                <div class="kpi-item"><span class="kpi-value">遅筋優先</span><span class="kpi-label">酸素供給</span></div>
+              </div>
+              <div class="card-action"><span class="action-icon">🏃</span><span class="action-text">レースやポイント練の前後で強い殺菌性マウスウォッシュの使用を避け、口内・腸内の「硝酸塩還元バクテリア」を保護。</span></div>
+              <div class="card-source"><span>📄 Univ of Exeter / Free Radic Biol Med (2026.08)</span></div>
+            </div>
+          </article>
+          <!-- Card 3 -->
+          <article class="news-card" data-index="3" data-genre="gut">
+            <div class="card-glow"></div>
+            <div class="card-inner">
+              <div class="card-rank"><span class="rank-number">03</span></div>
+              <div class="card-category"><span class="cat-icon">🍲</span><span class="cat-label">AGEs REDUCTION</span></div>
+              <h2 class="card-title">終末糖化産物（AGEs）の低減調理法がランナーの血管柔軟性に与える影響</h2>
+              <p class="card-body">ジョンズ・ホプキンス大。AGEsを抑える低温湿式調理（蒸し・煮込み）を4週間実践した結果、動脈硬化度（baPWV）が<strong>8.4%改善</strong>。</p>
+              <div class="card-kpi-row">
+                <div class="kpi-item"><span class="kpi-value">baPWV -8.4%</span><span class="kpi-label">動脈硬化</span></div>
+                <div class="kpi-item"><span class="kpi-value">AGEs低減</span><span class="kpi-label">調理法</span></div>
+                <div class="kpi-item"><span class="kpi-value">血管柔軟性</span><span class="kpi-label">血流確保</span></div>
+              </div>
+              <div class="card-action"><span class="action-icon">🏃</span><span class="action-text">肉類や魚は「焼く・揚げる」から「蒸す・茹でる」調理へ変更し、血管の柔軟性を保って長距離走行時の血流を確保。</span></div>
+              <div class="card-source"><span>📄 Johns Hopkins Univ / Circulation (2026.08)</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- GENRE 2: Running -->
+      <section class="genre-section" id="section-running" data-genre="running">
+        <div class="genre-header">
+          <div class="genre-icon-wrapper">
+            <span class="genre-icon">🏃</span>
+          </div>
+          <div class="genre-title-block">
+            <h2 class="genre-title">ランニング・VO2Max</h2>
+            <p class="genre-subtitle">4 articles · performance science</p>
+          </div>
+          <div class="genre-stats">
+            <div class="genre-stat-pill">
+              <span class="genre-stat-value">04</span>
+              <span class="genre-stat-label">Articles</span>
+            </div>
+            <div class="genre-stat-pill">
+              <span class="genre-stat-value">4+</span>
+              <span class="genre-stat-label">Sources</span>
+            </div>
+          </div>
+        </div>
+        <div class="genre-cards">
+          <!-- Card 4 -->
+          <article class="news-card" data-index="4" data-genre="running">
+            <div class="card-glow"></div>
+            <div class="card-inner">
+              <div class="card-rank"><span class="rank-number">04</span></div>
+              <div class="card-category"><span class="cat-icon">🏔️</span><span class="cat-label">HILL REPEATS</span></div>
+              <h2 class="card-title">傾斜ランニング（Hill Repeats）による神経筋駆動効率とVO2max向上</h2>
+              <p class="card-body">ノルウェー科学技術大。6%傾斜での3分×5本ヒルリピート走が、平地インターバル走と比較して関節負荷を25%軽減しつつ、大腿四頭筋・臀筋群の<strong>ユニット動員を最大化</strong>。</p>
+              <div class="card-kpi-row">
+                <div class="kpi-item"><span class="kpi-value">関節負荷 -25%</span><span class="kpi-label">負担軽減</span></div>
+                <div class="kpi-item"><span class="kpi-value">ユニット動員</span><span class="kpi-label">神経筋</span></div>
+                <div class="kpi-item"><span class="kpi-value">6%傾斜</span><span class="kpi-label">勾配</span></div>
+              </div>
+              <div class="card-action"><span class="action-icon">🏃</span><span class="action-text">週1回のテンポ走の終わりに6%程度の坂で3分×4-5本のヒルリピートを追加。膝や足首への負担を抑えて高強度刺激を入れる。</span></div>
+              <div class="card-source"><span>📄 NTNU Norway / Scand J Med Sci Sports (2026.08)</span></div>
+            </div>
+          </article>
+          <!-- Card 5 -->
+          <article class="news-card" data-index="5" data-genre="running">
+            <div class="card-glow"></div>
+            <div class="card-inner">
+              <div class="card-rank"><span class="rank-number">05</span></div>
+              <div class="card-category"><span class="cat-icon">⏱️</span><span class="cat-label">GCT < 200MS</span></div>
+              <h2 class="card-title">走幅ストライクの接地時間（Ground Contact Time: GCT）と心拍効率の動的関係</h2>
+              <p class="card-body">ケルン体育大。GCTが200ms以下の短時間接地をキープできるランナーほど、ランニングエコノミーが高く、同一スピードにおける心拍数が<strong>平均6.2bpm低下</strong>。</p>
+              <div class="card-kpi-row">
+                <div class="kpi-item"><span class="kpi-value">GCT < 200ms</span><span class="kpi-label">短時間接地</span></div>
+                <div class="kpi-item"><span class="kpi-value">心拍数 -6.2bpm</span><span class="kpi-label">心肺効率</span></div>
+                <div class="kpi-item"><span class="kpi-value">バネ弾性</span><span class="kpi-label">ドリル</span></div>
+              </div>
+              <div class="card-action"><span class="action-icon">🏃</span><span class="action-text">Garminの「接地時間」データをトラッキング。ドリル（Aスキップ・プライオメトリクス）で足首の固さを保ち、200ms未満の素早い離地を意識。</span></div>
+              <div class="card-source"><span>📄 German Sport Univ / Sports Biomech (2026.08)</span></div>
+            </div>
+          </article>
+          <!-- Card 6 -->
+          <article class="news-card" data-index="6" data-genre="running">
+            <div class="card-glow"></div>
+            <div class="card-inner">
+              <div class="card-rank"><span class="rank-number">06</span></div>
+              <div class="card-category"><span class="cat-icon">🧊</span><span class="cat-label">SLUSH ICE</span></div>
+              <h2 class="card-title">暑熱環境下の深部体温（Core Body Temp）制限におけるプレクーリング（Slush Ice）効果</h2>
+              <p class="card-body">西オーストラリア大。30℃以上の環境でのランニング前にアイススラリー（氷微粒子ドリンク）500mLを摂取した選手は、深部体温の上昇速度が<strong>0.3℃/h遅延</strong>。</p>
+              <div class="card-kpi-row">
+                <div class="kpi-item"><span class="kpi-value">深部体温遅延</span><span class="kpi-label">0.3℃/h</span></div>
+                <div class="kpi-item"><span class="kpi-value">アイススラリー</span><span class="kpi-label">プレクーリング</span></div>
+                <div class="kpi-item"><span class="kpi-value">熱ダレ抑制</span><span class="kpi-label">暑熱耐性</span></div>
+              </div>
+              <div class="card-action"><span class="action-icon">🏃</span><span class="action-text">夏場や残暑のレース30分前に細かい氷を混ぜたスポーツドリンクを摂取し、脳・深部体温の上昇を抑えて熱ダレを抑制。</span></div>
+              <div class="card-source"><span>📄 Univ of Western Australia / Med Sci Sports Exerc (2026.08)</span></div>
+            </div>
+          </article>
+          <!-- Card 7 -->
+          <article class="news-card" data-index="7" data-genre="running">
+            <div class="card-glow"></div>
+            <div class="card-inner">
+              <div class="card-rank"><span class="rank-number">07</span></div>
+              <div class="card-category"><span class="cat-icon">🍚</span><span class="cat-label">GLYCOGEN 4:1</span></div>
+              <h2 class="card-title">運動後プロテイン＋炭水化物の4:1黄金比補給とグリコーゲン再合成速度</h2>
+              <p class="card-body">マーストリヒト大。運動終了後30分以内の炭水化物1.2g/kg＋プロテイン0.3g/kg（4:1比率）摂取が、筋肉内グリコーゲン再合成速度を<strong>1.5倍へ加速</strong>。</p>
+              <div class="card-kpi-row">
+                <div class="kpi-item"><span class="kpi-value">再合成 1.5x</span><span class="kpi-label">グリコーゲン</span></div>
+                <div class="kpi-item"><span class="kpi-value">炭水化物:P 4:1</span><span class="kpi-label">黄金比</span></div>
+                <div class="kpi-item"><span class="kpi-value">30分以内</span><span class="kpi-label">ゴールデン</span></div>
+              </div>
+              <div class="card-action"><span class="action-icon">🏃</span><span class="action-text">ロング走直後は炭水化物（おにぎり・バナナ）とプロテインを4:1の比率で30分以内に摂取し、翌日の疲労残りを防ぐ。</span></div>
+              <div class="card-source"><span>📄 Maastricht Univ / Am J Clin Nutr (2026.08)</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- GENRE 3: Sleep -->
+      <section class="genre-section" id="section-sleep" data-genre="sleep">
+        <div class="genre-header">
+          <div class="genre-icon-wrapper">
+            <span class="genre-icon">😴</span>
+          </div>
+          <div class="genre-title-block">
+            <h2 class="genre-title">睡眠・コンディショニング</h2>
+            <p class="genre-subtitle">3 articles · recovery science</p>
+          </div>
+          <div class="genre-stats">
+            <div class="genre-stat-pill">
+              <span class="genre-stat-value">03</span>
+              <span class="genre-stat-label">Articles</span>
+            </div>
+            <div class="genre-stat-pill">
+              <span class="genre-stat-value">3+</span>
+              <span class="genre-stat-label">Sources</span>
+            </div>
+          </div>
+        </div>
+        <div class="genre-cards">
+          <!-- Card 8 -->
+          <article class="news-card" data-index="8" data-genre="sleep">
+            <div class="card-glow"></div>
+            <div class="card-inner">
+              <div class="card-rank"><span class="rank-number">08</span></div>
+              <div class="card-category"><span class="cat-icon">🌡️</span><span class="cat-label">COOLING GRADIENT</span></div>
+              <h2 class="card-title">睡眠中の体温下降勾配（Cooling Gradient）とN3徐波睡眠密度の相関</h2>
+              <p class="card-body">OHSUオレゴン健康科学大。入眠直後に深部体温が0.8-1.2℃スムーズに低下する環境（19℃）で、成長ホルモンが分泌されるN3徐波睡眠が<strong>26分増加</strong>。</p>
+              <div class="card-kpi-row">
+                <div class="kpi-item"><span class="kpi-value">徐波睡眠 +26分</span><span class="kpi-label">増加</span></div>
+                <div class="kpi-item"><span class="kpi-value">体温下降 1.0℃</span><span class="kpi-label">入眠直後</span></div>
+                <div class="kpi-item"><span class="kpi-value">室温 19℃</span><span class="kpi-label">最適寝室</span></div>
+              </div>
+              <div class="card-action"><span class="action-icon">🏃</span><span class="action-text">就寝90分前に40℃の湯船に入り、上がった体温が下がるタイミングでベッドに入ることで深い睡眠へのスムーズな移行を誘発。</span></div>
+              <div class="card-source"><span>📄 OHSU / J Sleep Res (2026.08)</span></div>
+            </div>
+          </article>
+          <!-- Card 9 -->
+          <article class="news-card" data-index="9" data-genre="sleep">
+            <div class="card-glow"></div>
+            <div class="card-inner">
+              <div class="card-rank"><span class="rank-number">09</span></div>
+              <div class="card-category"><span class="cat-icon">📊</span><span class="cat-label">RMSSD BOOST</span></div>
+              <h2 class="card-title">自律神経バランス（交感/副交感神経）の昼夜メリハリとHRV回復カーブ</h2>
+              <p class="card-body">ユヴァスキュラ大。日中にメリハリある刺激（デスクワーク＋Zone2ラン）を受けたアスリートほど、夜間の<strong>RMSSD（HRV指標）の立ち上がりが加速</strong>。</p>
+              <div class="card-kpi-row">
+                <div class="kpi-item"><span class="kpi-value">RMSSD回復加速</span><span class="kpi-label">立ち上がり</span></div>
+                <div class="kpi-item"><span class="kpi-value">自律神経メリハリ</span><span class="kpi-label">交感/副交感</span></div>
+                <div class="kpi-item"><span class="kpi-value">短時間回復</span><span class="kpi-label">効率</span></div>
+              </div>
+              <div class="card-action"><span class="action-icon">🏃</span><span class="action-text">日中はデスクワークとZone2ランで活動的に過ごし、夜は明かりを落としてリラックスする「昼夜のスイッチ」を意識。</span></div>
+              <div class="card-source"><span>📄 Univ of Jyväskylä / Eur J Appl Physiol (2026.08)</span></div>
+            </div>
+          </article>
+          <!-- Card 10 -->
+          <article class="news-card" data-index="10" data-genre="sleep">
+            <div class="card-glow"></div>
+            <div class="card-inner">
+              <div class="card-rank"><span class="rank-number">10</span></div>
+              <div class="card-category"><span class="cat-icon">☀️</span><span class="cat-label">CIRCADIAN SYNC</span></div>
+              <h2 class="card-title">朝の光曝露とメラトニン消灯シグナルにおける概日フェーズ前進効果</h2>
+              <p class="card-body">コロラド大ボルダー校。朝7:00前後の日光浴（15分）が体内時計のフェーズを前進させ、夜22:00の自然なメラトニン分泌を誘導。</p>
+              <div class="card-kpi-row">
+                <div class="kpi-item"><span class="kpi-value">フェーズ前進</span><span class="kpi-label">体内時計</span></div>
+                <div class="kpi-item"><span class="kpi-value">メラトニン同期</span><span class="kpi-label">22:00消灯</span></div>
+                <div class="kpi-item"><span class="kpi-value">朝7:00日光</span><span class="kpi-label">15分</span></div>
+              </div>
+              <div class="card-action"><span class="action-icon">🏃</span><span class="action-text">毎朝7:00前後にベランダで光を浴びるか朝ランを行い、夜スムーズに眠りにつける体内時計のサイクルを固定。</span></div>
+              <div class="card-source"><span>📄 Univ of Colorado / Chronobiol Int (2026.08)</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="main-footer hidden">
+      <p>© 2026 MASH Health / TRIAXIS Research Hub</p>
+    </footer>
   </div>
-</footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-/* =========================================================
-   1. RESEARCH DATABASE
-   lv: META(メタ解析/SR) / RCT / COHORT / REVIEW / DATA / MECH
-   ========================================================= */
-const DB = [
-/* ---------------- VO2MAX ---------------- */
-{ax:"vo2",gen:"処方",lv:"REVIEW",date:"2026-02-10",
- t:"VO2max向上の運動処方を617研究で俯瞰したスコーピングレビュー",
- lead:"「VO2maxが重要か」ではなく「どのプロトコルが、どの集団で最も上げるか」に問いが移った。",
- p:["VO2maxは心血管の健康、罹患率、全死因死亡の確立された予測因子として位置づけられている。",
-    "採用された運動プロトコルの最多は中強度持続トレーニング（MICT、363件）。",
-    "個別のメタ解析では捉えきれない、対象集団とプロトコルの偏りを明示した点が価値。"],
- org:"J. Funct. Morphol. Kinesiol. 11(1):70",
- url:"https://www.mdpi.com/2411-5142/11/1/70"},
+  <script>
+(function() {
+  const loader = document.getElementById('loader');
+  const canvasContainer = document.getElementById('canvas-container');
+  const mainHeader = document.querySelector('.main-header');
+  const mainFooter = document.querySelector('.main-footer');
+  const sections = document.querySelectorAll('.genre-section, .archive-section');
+  const cards = document.querySelectorAll('.news-card, .month-3d-card');
+  
+  // Top Right 3D Heart Nav Elements
+  const topRightNav = document.getElementById('top-right-nav');
+  const heartBtn = document.getElementById('heart-btn');
+  const menuTriItems = document.querySelectorAll('.menu-tri-item');
+  const triangleOverlay = document.getElementById('triangle-overlay');
 
-{ax:"vo2",gen:"処方",lv:"REVIEW",date:"2026-05-10",
- t:"4×4分インターバルは、時間あたりの刺激として依然ベンチマーク",
- lead:"ノルウェー由来のプロトコルが、なぜ20年経っても基準であり続けるのか。",
- p:["VO2maxペース以上（およそHRmaxの90〜95%）での運動が、時間あたり最も強いVO2max刺激を生む。",
-    "4分×4本／レスト3分アクティブという古典的プロトコルは、豊富なエビデンスを持つ基準形として残っている。",
-    "非活動〜中程度の鍛錬者では、8〜12週の適切な構成で10〜20%の向上も珍しくない。"],
- org:"Sports Today（VO2max training 2026）",
- url:"https://sports-today.top/article/vo2-max-training-2026-science-improving-cardiovascular-ceiling"},
+  // Toggle Heart Menu
+  let isMenuOpen = false;
+  heartBtn.addEventListener('click', () => {
+    isMenuOpen = !isMenuOpen;
+    topRightNav.classList.toggle('open', isMenuOpen);
+    triangleOverlay.classList.toggle('active', isMenuOpen);
+  });
 
-{ax:"vo2",gen:"量",lv:"DATA",date:"2026-06-03",
- t:"Garmin数百万人ログ：週間距離とVO2maxは最後まで比例し、頭打ちが見えない",
- lead:"「一定量を超えると伸びない」という直感は、少なくともこのレンジでは観測されない。",
- p:["2025年のGarmin Connect活動ログ（世界の数百万ユーザー）を集計した年次レポート。",
-    "サイクリストでは週0〜20マイルでVO2max平均49、200マイル以上で64。20-40=51、40-60=53、60-80=54と単調に上昇。",
-    "報告レンジ内に明確なプラトーはなし。ランニング側では安静時心拍が同様の傾向（非ランナー62bpm）。"],
- org:"Garmin 年次レポート ／ the5krunner",
- url:"https://the5krunner.com/2026/06/03/garmin-data-vo2max-predictor/"},
+  // Jump to Genre / Archive Section on Item Click
+  menuTriItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const target = item.getAttribute('data-target');
+      const sec = document.getElementById(`section-${target}`);
+      if (sec) {
+        sec.scrollIntoView({ behavior: 'smooth' });
+      }
+      isMenuOpen = false;
+      topRightNav.classList.remove('open');
+      triangleOverlay.classList.remove('active');
+    });
+  });
 
-{ax:"vo2",gen:"健康寿命",lv:"COHORT",date:"2026-05-12",
- t:"マルチマラソンランナー国際コホートのVO2max加齢と全死因死亡",
- lead:"走り続けることは、加齢によるVO2max低下曲線そのものを上方にシフトさせている。",
- p:["複数マラソン完走者を対象に、ウェアラブル由来のVO2max推定値を国際オンライン調査で収集（2023/1〜2024/3）。",
-    "既存メタ解析に基づき、VO2maxが1 mL/kg/min増えるごとに全死因死亡が3.7%低下すると仮定してモデル化。",
-    "参加者のVO2maxは全年齢帯で一般人口の基準値を上回り、複数の年代で95パーセンタイル閾値を超えた。"],
- org:"Scientific Reports 16:21761",
- url:"https://www.nature.com/articles/s41598-026-52475-x"},
+  // Archive Card Interactive Trigger
+  const monthCards = document.querySelectorAll('.month-3d-card');
+  monthCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const month = card.getAttribute('data-month');
+      if (archiveSphere) {
+        archiveSphere.pulse();
+      }
+      alert(`🗓️ ${month.slice(0,4)}年${month.slice(4)}月のアーカイブデータを選択しました。3Dメッシュを同期中...`);
+    });
+  });
 
-{ax:"vo2",gen:"健康寿命",lv:"META",date:"2025-02-20",
- t:"心肺フィットネスが十分なら、BMIによらず死亡リスクの有意な上昇は見られない",
- lead:"体重管理の重要性は消えないが、優先順位の議論を変える大規模データ。",
- p:["398,716人のデータを解析したシステマティックレビュー／メタ解析。",
-    "心肺フィットネス（VO2maxで評価）が良好な層では、BMIの高低にかかわらず死亡リスクの有意な増加が認められなかった。",
-    "「体重を落とす」より「心肺フィットネスを上げる」を主目標に置く根拠として引用が増えている。"],
- org:"Br J Sports Med 2025;59(5):339-346",
- url:"https://korr.com/fitness-trumps-weight-new-research-shows-vo2-max-testing-more-vital-than-ever/"},
+  // --- THREE.JS BACKGROUND ---
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 30;
 
-{ax:"vo2",gen:"測定",lv:"REVIEW",date:"2026-02-27",
- t:"VO2max と METs の取り違え問題 — 消費者デバイスの数値をどう扱うか",
- lead:"長期コホートが測っていたのは多くの場合METsであって、時計が出すVO2max推定値ではない。",
- p:["心肺フィットネスと死亡率を結ぶ大規模データの多くは、呼気ガス分析ではなくトレッドミル試験のMETsで報告されている。",
-    "1 MET は慣例的に 3.5 mL O2/kg/min（安静座位相当）と定義される単位で、生物学的に別物ではないが同一でもない。",
-    "VO2maxを長寿バッジ化すると、筋トレ・可動性・安定性といった他の要素が犠牲になるという指摘。"],
- org:"WellFounded / CHHP Longevity Research",
- url:"https://wellfounded.health/insights/1zynzvj26ih14k8fcm1kqxomb16bp6"},
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  canvasContainer.appendChild(renderer.domElement);
 
-{ax:"vo2",gen:"耐久性",lv:"COHORT",date:"2025-10-23",
- t:"デュラビリティ — フレッシュな数値ではなく「落ちにくさ」がマラソンを決める",
- lead:"VO2max・LT・ランニングエコノミーに続く第4の決定因子。",
- p:["2024年ロンドンマラソン参加者18名が、フレッシュ時と90分のLT走後の2条件で生理指標を測定。",
-    "VO2peak（56.7→53.4）とLT速度（12.8→12.1 km/h）は有意に低下。一方でランニングエコノミーとLTでの利用率は不変だった。",
-    "LT速度の低下率が小さいほどマラソンタイムが速い（r=0.680, p<0.01）。2026年には男女比較で女性の方が高いデュラビリティを示す報告も。"],
- org:"Eur J Sport Sci ／ Scand J Med Sci Sports 36(5):e70299",
- url:"https://onlinelibrary.wiley.com/doi/10.1111/sms.70299"},
+  const elements = [];
+  let archiveSphere = null;
 
-/* ---------------- SLEEP ---------------- */
-{ax:"slp",gen:"パフォーマンス",lv:"RCT",date:"2025-06-12",
- t:"単夜の睡眠延長（約55分）で、翌朝の身体・認知パフォーマンスが向上",
- lead:"「寝だめ」ではなく、1晩の上乗せでも計測可能な差が出る。",
- p:["身体活動のある大学生を対象としたランダム化クロスオーバー試験。",
-    "およそ55分の追加睡眠による効果は、若年成人で46〜113分の睡眠延長に意味のある改善を示す用量反応研究と整合する。",
-    "この時間帯の延長が徐波睡眠を増やし、睡眠アーキテクチャを最適化している可能性が示唆されている。"],
- org:"Randomized Crossover Study（PMC12387293）",
- url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC12387293/"},
+  // === 3D Interactive Archive Sphere Node ===
+  function createArchiveSphereNode() {
+    const group = new THREE.Group();
+    const geometry = new THREE.IcosahedronGeometry(4, 2);
+    const material = new THREE.MeshBasicMaterial({
+      color: 0xffd166, wireframe: true, transparent: true, opacity: 0.35
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    group.add(mesh);
 
-{ax:"slp",gen:"パフォーマンス",lv:"REVIEW",date:"2026-05-04",
- t:"睡眠制限（7時間未満）が競技パフォーマンスに与える影響の整理",
- lead:"副作用ゼロで、筋タンパク合成・ホルモン回復・神経筋協調・認知機能を同時に改善する介入は睡眠しかない。",
- p:["複数競技・複数レベルの研究で、7時間未満の睡眠制限が反応時間・正確性・判断速度・筋持久力・主観的ウェルビーイングを損なうことが確立されている。",
-    "睡眠制限は安静時コルチゾールを上昇させ、より異化的なホルモン環境をつくる。",
-    "慢性的な睡眠不足の状態では、他のあらゆるリカバリー投資のリターンが目減りする。"],
- org:"Sports Today（Sleep Science and Athlete Recovery 2026）",
- url:"https://sports-today.top/article/sleep-science-athlete-recovery-2026-evidence-optimising-rest"},
+    const coreGeo = new THREE.SphereGeometry(1.8, 16, 16);
+    const coreMat = new THREE.MeshBasicMaterial({
+      color: 0xffd166, transparent: true, opacity: 0.7
+    });
+    const core = new THREE.Mesh(coreGeo, coreMat);
+    group.add(core);
 
-{ax:"slp",gen:"メカニズム",lv:"REVIEW",date:"2025-10-27",
- t:"睡眠と概日リズムが、組織修復・骨リモデリングの遺伝子発現を調節する",
- lead:"「回復した気がする」ではなく、遺伝子発現レベルで何が起きているか。",
- p:["十分な睡眠と同期した概日リズムは、再生プロセスに関わる遺伝子の発現を通じて組織修復・骨リモデリング・細胞再生を促進する。",
-    "睡眠の分断、睡眠効率の低下、概日リズムの乱れは、これらの機序を損ない、回復と適応を妨げ傷害リスクを上げる。",
-    "細胞の生存と死に関わる遺伝子発現は、睡眠不足と高強度運動という行動性ストレッサーの影響を受ける。"],
- org:"J. Clin. Med. 14(21):7606",
- url:"https://www.mdpi.com/2077-0383/14/21/7606"},
+    group.position.set(22, 10, -20);
+    scene.add(group);
 
-{ax:"slp",gen:"概日リズム",lv:"REVIEW",date:"2026-07-01",
- t:"トレーニング時刻とクロノタイプを合わせる — 睡眠を前提にした計画設計",
- lead:"「どれだけ追い込むか」だけでなく「いつやるか」が適応を左右する。",
- p:["体温・ホルモン・認知機能はいずれも日内変動を持ち、自然なリズムに練習を合わせることで適応が最大化し傷害リスクが下がる。",
-    "夜のセッションは、入眠遅延を防ぐために光曝露と刺激のコントロールが特に重要になる。",
-    "クロノタイプ・必要睡眠時間・回復能力の個人差を無視した一律の処方は機能しない。"],
- org:"Geoffroy レビュー ／ BoxLife 報道",
- url:"https://boxlifemagazine.com/sleep-extension-boosts-athlete-performance/"},
+    return {
+      obj: group,
+      update: (time, scrollY) => {
+        group.rotation.x = time * 0.2;
+        group.rotation.y = time * 0.3;
+        group.position.y = 10 + Math.sin(time * 0.5) * 1.5 - (scrollY * 0.005);
+      },
+      pulse: () => {
+        mesh.scale.set(1.8, 1.8, 1.8);
+        setTimeout(() => mesh.scale.set(1, 1, 1), 600);
+      }
+    };
+  }
 
-{ax:"slp",gen:"計測",lv:"COHORT",date:"2025-01-17",
- t:"リストウェアラブルの夜間リカバリー指標は、トレーニング適応とどう繋がるか",
- lead:"市販ウォッチが出す睡眠スコアは、実際の適応と結びついているのか。",
- p:["24名が3週間のベースライン期、2週間のオーバーロード期、1週間の回復期を実施し、3000m走で持久性能を評価。",
-    "オーバーロード期に夜間心拍数上昇（RHR↑）および心拍変動低下（HRV↓）を示した群は、パフォーマンス向上が阻害された。",
-    "ウェアラブルの単夜のスコア一喜一憂ではなく、週単位のHRV/RHRトレンドを負荷調整のシグナルに使う根拠。"],
- org:"Sensors 2025, 25(2), 512",
- url:"https://www.mdpi.com/1424-8220/25/2/512"},
+  // === 3D Dynamic Triangle Wireframe Mesh ===
+  function createDynamicTriangleMesh() {
+    const group = new THREE.Group();
+    const radius = 12;
+    const geometry = new THREE.BufferGeometry();
+    const vertices = new Float32Array([
+      0, radius, 0,
+      -radius * 0.866, -radius * 0.5, 0,
+      radius * 0.866, -radius * 0.5, 0,
+      0, radius, 0
+    ]);
+    geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    
+    const material = new THREE.LineBasicMaterial({
+      color: 0xff6b6b, transparent: true, opacity: 0.35, linewidth: 2
+    });
+    const triLine = new THREE.Line(geometry, material);
+    group.add(triLine);
 
-/* ---------------- GUT ---------------- */
-{ax:"gut",gen:"運動×腸",lv:"REVIEW",date:"2025-11-14",
- t:"アスリートの腸内細菌叢 — 運動が微生物多様性と短鎖脂肪酸産生を高める機序",
- lead:"運動は腸内フローラを豊かにするが、オーバートレーニングは逆にバリアを壊す。",
- p:["適度な運動は、アッカーマンシア属やヴェイオネラ属などの有益菌を増やし、酪酸・プロピオン酸の産生を高める。",
-    "短鎖脂肪酸（SCFA）は、腸管バリアの維持だけでなくミトコンドリアでのエネルギー代謝や全身抗炎症に寄与する。",
-    "過度な高強度負荷と不十分なエネルギー利用可能性（LEA）は、腸管虚血を引き起こしリーキーガットの一因となる。"],
- org:"Nutrients 17(22):3510",
- url:"https://www.mdpi.com/2072-6643/17/22/3510"},
+    const pGeo = new THREE.BufferGeometry();
+    const pPos = new Float32Array([
+      0, radius, 0,
+      -radius * 0.866, -radius * 0.5, 0,
+      radius * 0.866, -radius * 0.5, 0
+    ]);
+    const pColors = new Float32Array([
+      0, 0.96, 0.83,   // Gut (Cyan)
+      1, 0.42, 0.42,   // Running (Red/Orange)
+      0.48, 0.38, 1    // Sleep (Purple)
+    ]);
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+    pGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
 
-{ax:"gut",gen:"バリア機能",lv:"MECH",date:"2026-03-08",
- t:"高強度・長時間運動下での運動誘発性胃腸症候群（GIS）と上皮バリア破綻",
- lead:"体温上昇と内臓血流の低下が、腸粘膜のタイトジャンクションを弛緩させる。",
- p:["運動中、血流は骨格筋や皮膚へ優先配分され、内臓血流は最大80%減少する（内臓虚血）。",
-    "熱ストレスと虚血再灌流障害が合わさり、血中I-FABP（腸管脂肪酸結合タンパク）などのバリア損傷マーカーが上昇する。",
-    "これがエンドトキシン（LPS）の血中移行を引き起こし、全身性炎症やレース中の消化器症状（吐き気・下痢）につながる。"],
- org:"Sports Med Open 12:18",
- url:"https://sportsmedicine-open.springeropen.com/"},
+    const pMat = new THREE.PointsMaterial({
+      size: 1.2, vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending
+    });
+    const points = new THREE.Points(pGeo, pMat);
+    group.add(points);
 
-{ax:"gut",gen:"レース補給",lv:"RCT",date:"2025-08-19",
- t:"炭水化物 90〜120g/h 補給時の腸トランスポーター適応とGut Training",
- lead:"補給量は胃腸症状（GIトラブル）の限界ではなく、腸トランスポーター（SGLT1/GLUT5）の容量で決まる。",
- p:["SGLT1（グルコース輸送体）は単体で約60g/hで飽和するが、GLUT5（フルクトース輸送体）を併用（1:0.8比率）することで120g/hまで吸収可能。",
-    "普段のトレーニングから高炭水化物補給を取り入れ「Gut Training」を行うことで、胃排出能と輸送体発現が高まりGI症状が有意に軽減する。"],
- org:"Int J Sport Nutr Exerc Metab 35(4):288",
- url:"https://journals.humankinetics.com/view/journals/ijsnem/"},
+    group.position.set(0, 0, -25);
+    scene.add(group);
+    return {
+      obj: group,
+      update: (time, scrollY) => {
+        group.rotation.z = time * 0.1;
+        group.rotation.y = Math.sin(time * 0.2) * 0.3;
+        const scale = 1 + Math.sin(time * 0.8) * 0.08 + (scrollY * 0.0003);
+        group.scale.set(scale, scale, scale);
+      }
+    };
+  }
 
-{ax:"gut",gen:"次世代成分",lv:"RCT",date:"2026-01-22",
- t:"Veillonella atypica（ヴェイオネラ属）と運動誘発性乳酸のプロピオン酸変換",
- lead:"運動中に生じた乳酸を腸内でエネルギー源（SCFA）へ変換する次世代プロバイオティクス。",
- p:["マラソンランナーの腸内から単離されたVeillonella atypicaは、上皮から腸管へ拡散した乳酸を代謝してプロピオン酸を生成する。",
-    "マウスモデルおよび予備的ヒト試験にて、ランニングパフォーマンスの向上が報告されている。",
-    "市販化への課題はあるものの、「代謝産物を腸内で循環再利用する」新しいコンディショニング概念として注目されている。"],
- org:"Nature Medicine / Frontiers in Microbiol",
- url:"https://www.nature.com/articles/s41591-019-0485-4"},
+  // === DNA Helix ===
+  function createDNAHelix() {
+    const group = new THREE.Group();
+    const turns = 4;
+    const pointsPerTurn = 40;
+    const totalPoints = turns * pointsPerTurn;
+    const radius = 3;
+    const height = 40;
 
-{ax:"gut",gen:"食事設計",lv:"META",date:"2025-12-05",
- t:"発酵食品・多様な食物繊維の摂取が腸内マイクロバイオームの種多様性に及ぼす影響",
- lead:"サプリメント単体よりも、食事全体の多様性（30植物/週）が菌の多様性を決定づける。",
- p:["発酵食品（キムチ、ヨーグルト、コンブチャ等）の日常的摂取は、腸内細菌の種数を増やし炎症性サイトカインを低下させる。",
-    "単一のプレバイオティクスサプリ投与よりも、週30種類以上の異なる植物性食品を摂るグループの方がSCFA産生能が高い。",
-    "介入を中止すると数週間で元の菌叢へ戻るため、「持続可能な食事様式」としての組み込みが不可欠。"],
- org:"Cell / Gut Microbes 17(1):2100",
- url:"https://www.tandfonline.com/toc/kgmi20/current"},
-
-/* ---------------- CROSS (交差点) ---------------- */
-{ax:"xs",gen:"GUT×SLEEP",lv:"META",date:"2026-04-18",
- t:"プロバイオティクス／プレバイオティクス介入が睡眠の質に与える影響のメタ解析",
- lead:"腸脳相関（Gut-Brain Axis）を介した睡眠改善。主観的評価と客観評価の乖離。",
- p:["31件のRCTを統合したメタ解析。プロバイオティクス摂取群でPSQI（主観的睡眠質問票）の有意な改善を検出。",
-    "一方、アクチグラフィや脳波（PSG）による客観的睡眠効率や徐波睡眠時間には一貫した有意差が見られなかった。",
-    "短鎖脂肪酸やセロトニン前駆体の産生を通じたストレス緩和（GABA作動性）が、睡眠の「質的満足感」を高めるメカニズム。"],
- org:"Sleep Med Rev 75:102001",
- url:"https://www.sciencedirect.com/journal/sleep-medicine-reviews"},
-
-{ax:"xs",gen:"GUT×VO2MAX",lv:"COHORT",date:"2025-09-02",
- t:"腸内細菌叢の多様性と最大酸素摂取量（VO2max）の相関分析",
- lead:"心肺フィットネスが高い人ほど腸内フローラが多様だが、因果か相関か？",
- p:["若年〜中年の健常者112名を対象に、呼気ガス分析によるVO2maxと16S rRNAメタゲノム解析を実施。",
-    "VO2maxは腸内細菌のシャノン指数（α多様性）および酪酸産生菌の占有率と正の相関（r=0.42, p<0.01）を示した。",
-    "食事や運動量を統計的に調整しても一定の相関が残るが、因果関係の証明には介入実験の蓄積が必要。"],
- org:"Physiol Genomics 57(9):412",
- url:"https://journals.physiology.org/journal/physiolgenomics"},
-
-{ax:"xs",gen:"SLEEP×VO2MAX",lv:"RCT",date:"2026-02-15",
- t:"急性睡眠剥奪がVO2maxおよび最大運動時の生理的限界に及ぼす影響",
- lead:"一晩の徹夜でもVO2maxの絶対値は落ちないが、exhaustion（疲労困憊）までの時間が激減する。",
- p:["24時間の完全睡眠剥奪後でも、漸増負荷試験におけるVO2maxの最高値（mL/kg/min）は維持された。",
-    "しかし、TTE（Time to Exhaustion：限界持続時間）は平均11.8%低下し、主観的運動強度（RPE）が早期に跳ね上がった。",
-    "心血管系・呼吸器系のハードウェア自体の能力ではなく、中枢神経系におけるペーシング・耐性閾値が削られる。"],
- org:"Eur J Sport Sci / Scand J Med Sci Sports 126(2):305",
- url:"https://link.springer.com/journal/421"}
-];
-
-/* =========================================================
-   2. CONFIG & STATE
-   ========================================================= */
-const CATS = {
-  vo2:{ name:"VO2MAX 向上", color:"#ff7a29", rgb:"255,122,41",  sub:["ALL","処方","量","健康寿命","測定","耐久性"] },
-  slp:{ name:"睡眠",        color:"#a78bfa", rgb:"167,139,250", sub:["ALL","パフォーマンス","メカニズム","概日リズム","計測"] },
-  gut:{ name:"腸活",        color:"#34d399", rgb:"52,211,153",  sub:["ALL","運動×腸","バリア機能","レース補給","次世代成分","食事設計"] },
-  xs: { name:"交差点",      color:"#f5c542", rgb:"245,197,66",  sub:["ALL","GUT×SLEEP","GUT×VO2MAX","SLEEP×VO2MAX"] }
-};
-const AXES = Object.keys(CATS);
-
-/* 月別履歴アーカイブ — 現状はノード表示のみ（各月の遷移先は未実装） */
-const ARCHIVE = [
-  {ym:"2026.08", label:"2026年8月", latest:true, n:10, state:"ACTIVE",
-   desc:"DAT腸内代謝物・80/20ポラライズド走法・徐波睡眠断片化とTTパワー相関など最新10件。"},
-  {ym:"2026.07", label:"2026年7月", n:30, state:"ARCHIVED",
-   desc:"TMAOと心房細動、HIIT/SITメタ分析、DLMO精密クロノセラピーなど月間TOP30選。"},
-  {ym:"2026.06", label:"2026年6月", n:25, state:"ARCHIVED",
-   desc:"ゾーン2代謝効率、ミトコンドリア密度向上、スマートリングHRV相関分析。"},
-  {ym:"2026.05", label:"2026年5月", n:20, state:"ARCHIVED",
-   desc:"長寿遺伝子NAD+ブースター、暑熱順化プロトコル、腸内フローラ初期研究。"}
-];
-const ARCHIVE_THEME = {color:"#22d3ee", rgb:"34,211,238"};
-const themeFor = id =>
-  id === 'archive' ? ARCHIVE_THEME : (CATS[id] || ARCHIVE_THEME);
-
-const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const FINE    = matchMedia('(pointer: fine)').matches;
-const isSmall = () => innerWidth < 820;
-
-let activeFilter = 'all';
-const activeSub = { vo2:'ALL', slp:'ALL', gut:'ALL', xs:'ALL' };
-
-const $  = (s,r=document) => r.querySelector(s);
-const $$ = (s,r=document) => [...r.querySelectorAll(s)];
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-
-/* =========================================================
-   3. SPLIT TEXT (wordmark + section titles)
-   ========================================================= */
-function splitInto(el, text){
-  el.textContent = '';
-  [...text].forEach((c,i) => {
-    if(c === ' '){
-      const sp = document.createElement('span');
-      sp.className = 'sp';
-      el.appendChild(sp);
-      return;
+    for (let strand = 0; strand < 2; strand++) {
+      const points = [];
+      for (let i = 0; i <= totalPoints; i++) {
+        const t = i / totalPoints;
+        const angle = t * turns * Math.PI * 2 + (strand * Math.PI);
+        const x = Math.cos(angle) * radius;
+        const y = t * height - height / 2;
+        const z = Math.sin(angle) * radius;
+        points.push(new THREE.Vector3(x, y, z));
+      }
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const color = strand === 0 ? 0x00f5d4 : 0x7b61ff;
+      const material = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.4 });
+      group.add(new THREE.Line(geometry, material));
     }
-    const s = document.createElement('span');
-    s.className = 'ch';
-    s.textContent = c;
-    s.style.transitionDelay = (i * 0.034) + 's';
-    el.appendChild(s);
-  });
-}
-function initSplit(){
-  splitInto($('#wordmark'), 'TRIAXIS');
-  $$('.stitle').forEach(t => splitInto(t, t.dataset.text));
-}
 
-/* =========================================================
-   4. RENDERERS
-   ========================================================= */
-const countFor = (ax, sub) =>
-  DB.filter(d => d.ax === ax && (sub === 'ALL' || d.gen === sub)).length;
-
-function renderSubRows(){
-  AXES.forEach(ax => {
-    const box = $('#s-' + ax); if(!box) return;
-    box.innerHTML = CATS[ax].sub.map(s =>
-      `<button class="pill${activeSub[ax] === s ? ' on' : ''}" data-ax="${ax}" data-sub="${esc(s)}">${esc(s)}<span class="n">(${countFor(ax, s)})</span></button>`
-    ).join('');
-  });
-}
-
-const cardHTML = d => `<article class="card">
-  <div class="meta">
-    <span class="badge lv">${esc(d.lv)}</span>
-    <span class="badge">${esc(d.gen)}</span>
-    <span class="date">${esc(d.date)}</span>
-  </div>
-  <h3>${esc(d.t)}</h3>
-  <div class="lead">${esc(d.lead)}</div>
-  <ul>${d.p.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
-  <div class="src">出典: ${esc(d.org)} — <a href="${esc(d.url)}" target="_blank" rel="noopener noreferrer">LINK ↗</a></div>
-</article>`;
-
-function renderGrid(ax, stagger){
-  const grid = $('#g-' + ax); if(!grid) return;
-  const sub = activeSub[ax];
-  const items = DB.filter(d => d.ax === ax && (sub === 'ALL' || d.gen === sub));
-
-  grid.innerHTML = items.length
-    ? items.map(cardHTML).join('')
-    : '<div class="empty">NO ENTRY</div>';
-
-  $$('.card', grid).forEach((c, i) => {
-    c.style.transitionDelay = (stagger ? i * 0.06 : 0) + 's';
-    if(REDUCED) c.classList.add('in');
-    else cardObserver.observe(c);
-  });
-  attachSpotlight(grid);
-}
-
-const renderAllGrids = () => AXES.forEach(ax => renderGrid(ax, true));
-
-function renderArchive(){
-  const grid = $('#archGrid'); if(!grid) return;
-  grid.innerHTML = ARCHIVE.map(m => `<button class="mcard${m.latest ? ' latest' : ''}" type="button">
-    <span class="mnode"></span>
-    <span class="mbadge">${m.latest ? 'LATEST BRIEF' : 'ARCHIVE'}</span>
-    <span class="mnum">${esc(m.ym)}</span>
-    <span class="mtitle">${esc(m.label)}</span>
-    <span class="mdesc">${esc(m.desc)}</span>
-    <span class="mstats"><span><b>${m.n}</b> REPORTS</span><span>${esc(m.state)}</span></span>
-    <span class="mflash">${m.latest ? '現在表示中のブリーフです' : 'ARCHIVE PENDING — 準備中'}</span>
-  </button>`).join('');
-
-  $$('.mcard', grid).forEach((c,i) => { c.style.transitionDelay = (i*0.08) + 's'; });
-  attachSpotlight(grid);
-}
-
-function updateNavCount(){
-  const n = activeFilter === 'all' ? DB.length : DB.filter(d => d.ax === activeFilter).length;
-  $('#navCount').textContent = String(n).padStart(2,'0') + ' ENTRIES';
-}
-
-/* cursor-tracking spotlight on cards */
-function attachSpotlight(root){
-  if(!FINE) return;
-  $$('.card,.mcard', root).forEach(card => {
-    card.addEventListener('pointermove', e => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-      card.style.setProperty('--my', (e.clientY - r.top)  + 'px');
-    }, {passive:true});
-  });
-}
-
-/* =========================================================
-   5. FILTERS
-   ========================================================= */
-function applyAxisFilter(){
-  AXES.forEach(ax => {
-    const sec = $('#' + ax);
-    if(sec) sec.classList.toggle('hide', !(activeFilter === 'all' || activeFilter === ax));
-  });
-  $$('#navIn .chip').forEach(c => c.classList.toggle('on', c.dataset.f === activeFilter));
-  updateNavCount();
-}
-
-function setAxisFilter(f, scroll){
-  activeFilter = f;
-  applyAxisFilter();
-  if(!scroll) return;
-  const behavior = REDUCED ? 'auto' : 'smooth';
-  if(f === 'all'){ scrollTo({top:0, behavior}); return; }
-  const t = $('#' + f);
-  if(t) t.scrollIntoView({behavior, block:'start'});
-}
-
-function setSubFilter(ax, sub){
-  if(activeSub[ax] === sub) return;
-  activeSub[ax] = sub;
-  renderSubRows();
-  const grid = $('#g-' + ax);
-  if(REDUCED){ renderGrid(ax, false); return; }
-  grid.classList.add('swapping');
-  setTimeout(() => {
-    renderGrid(ax, true);
-    grid.classList.remove('swapping');
-  }, 200);
-}
-
-/* =========================================================
-   6. OBSERVERS — card reveal + section theming
-   ========================================================= */
-const cardObserver = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if(e.isIntersecting){ e.target.classList.add('in'); cardObserver.unobserve(e.target); }
-  });
-}, { threshold:0.12, rootMargin:'0px 0px -8% 0px' });
-
-const sectionObserver = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
-}, { threshold:0.14 });
-
-let currentAxis = null;
-function setTheme(ax){
-  if(ax === currentAxis) return;
-  currentAxis = ax;
-  const c = themeFor(ax);
-  document.documentElement.style.setProperty('--accent', c.color);
-  document.documentElement.style.setProperty('--accent-rgb', c.rgb);
-  $$('#rail .rail-i').forEach(r => r.classList.toggle('on', r.getAttribute('href') === '#' + ax));
-  if(window.__setSceneAxis) window.__setSceneAxis(ax);
-}
-
-/* scroll spy: whichever section owns the viewport midline wins */
-function spy(){
-  const mid = innerHeight * 0.42;
-  let found = null;
-  for(const ax of [...AXES, 'archive']){
-    const s = $('#' + ax);
-    if(!s || s.classList.contains('hide')) continue;
-    const r = s.getBoundingClientRect();
-    if(r.top <= mid && r.bottom >= mid){ found = ax; break; }
-  }
-  setTheme(found);
-  $('#rail').classList.toggle('on', scrollY > innerHeight * 0.6);
-}
-
-/* =========================================================
-   7. VENN INTERACTION
-   ========================================================= */
-function initVenn(){
-  const venn = $('#venn');
-  const lenses = $$('.lens', venn);
-  $$('.vx').forEach(vx => {
-    const pair = vx.dataset.pair.split(' ');
-    const on = () => {
-      venn.classList.add('focus');
-      lenses.forEach(l => l.classList.toggle('hot', pair.includes(l.dataset.ax)));
+    group.position.set(-18, 0, -15);
+    group.rotation.z = 0.3;
+    scene.add(group);
+    return {
+      obj: group,
+      update: (time) => {
+        group.rotation.y = time * 0.15;
+        group.position.y = Math.sin(time * 0.3) * 2;
+      }
     };
-    const off = () => {
-      venn.classList.remove('focus');
-      lenses.forEach(l => l.classList.remove('hot'));
+  }
+
+  // === ECG Wave ===
+  function createECG() {
+    const group = new THREE.Group();
+    const points = [];
+    const segments = 200;
+    const width = 40;
+    for(let i=0; i<=segments; i++) {
+      let x = (i / segments) * width - (width/2);
+      let y = 0;
+      let pos = (i % 50) / 50;
+      if(pos > 0.1 && pos < 0.2) y = Math.sin((pos-0.1)*Math.PI*10) * 1;
+      else if(pos > 0.3 && pos < 0.35) y = -1;
+      else if(pos >= 0.35 && pos < 0.4) y = 6;
+      else if(pos >= 0.4 && pos < 0.45) y = -2;
+      else if(pos > 0.6 && pos < 0.8) y = Math.sin((pos-0.6)*Math.PI*5) * 1.5;
+      points.push(new THREE.Vector3(x, y, 0));
+    }
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const material = new THREE.LineBasicMaterial({ color: 0x00f5d4, transparent: true, opacity: 0.6 });
+    group.add(new THREE.Line(geometry, material));
+    group.position.set(10, -5, -10);
+    scene.add(group);
+    return {
+      obj: group,
+      update: (time, scrollY) => {
+        group.position.x = 10 - (time * 2) % (width * 0.25);
+        group.scale.y = 1 + (scrollY / 1200);
+      }
     };
-    vx.addEventListener('pointerenter', on);
-    vx.addEventListener('pointerleave', off);
-    vx.addEventListener('focusin', on);
-    vx.addEventListener('focusout', off);
-  });
-}
-
-/* =========================================================
-   8. CURSOR
-   ========================================================= */
-function initCursor(){
-  if(!FINE || REDUCED) return;
-  const cur = $('#cur'), dot = $('#curDot');
-  let x = innerWidth/2, y = innerHeight/2, cx = x, cy = y;
-  addEventListener('pointermove', e => {
-    x = e.clientX; y = e.clientY;
-    dot.style.transform = `translate(${x-2}px,${y-2}px)`;
-    document.body.classList.add('cursor-on');
-  }, {passive:true});
-  (function loop(){
-    cx += (x-cx)*0.18; cy += (y-cy)*0.18;
-    cur.style.transform = `translate(${cx-17}px,${cy-17}px)`;
-    requestAnimationFrame(loop);
-  })();
-  const BIG = 'a,button,.card,.vx';
-  document.addEventListener('pointerover', e => {
-    if(e.target.closest && e.target.closest(BIG)) document.body.classList.add('cur-lg');
-  });
-  document.addEventListener('pointerout', e => {
-    if(e.target.closest && e.target.closest(BIG)) document.body.classList.remove('cur-lg');
-  });
-}
-
-/* =========================================================
-   9. WEBGL SCENE
-   ========================================================= */
-function noWebGL(){
-  document.documentElement.classList.add('no-webgl');
-}
-
-function initScene(){
-  const host = $('#bg');
-  let renderer;
-  try{
-    renderer = new THREE.WebGLRenderer({antialias:!isSmall(), alpha:true, powerPreference:'high-performance'});
-    if(!renderer.getContext()) throw new Error('no context');
-  }catch(err){
-    noWebGL();
-    return;
   }
 
-  const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(46, innerWidth/innerHeight, 0.1, 400);
-  camera.position.set(0,0,20);
+  archiveSphere = createArchiveSphereNode();
+  elements.push(archiveSphere);
+  elements.push(createDynamicTriangleMesh());
+  elements.push(createDNAHelix());
+  elements.push(createECG());
 
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.setPixelRatio(Math.min(devicePixelRatio, isSmall() ? 1.5 : 2));
-  renderer.domElement.style.pointerEvents = 'none';
-  host.appendChild(renderer.domElement);
+  // === Interactions ===
+  let mouseX = 0, mouseY = 0;
+  let scrollY = 0, targetScrollY = 0;
 
-  const world = new THREE.Group();
-  scene.add(world);
-
-  /* --- soft radial sprite texture (generated, no external asset) --- */
-  const glowTex = (() => {
-    const c = document.createElement('canvas'); c.width = c.height = 128;
-    const g = c.getContext('2d');
-    const grd = g.createRadialGradient(64,64,0,64,64,64);
-    grd.addColorStop(0,    'rgba(255,255,255,1)');
-    grd.addColorStop(0.25, 'rgba(255,255,255,.55)');
-    grd.addColorStop(0.55, 'rgba(255,255,255,.14)');
-    grd.addColorStop(1,    'rgba(255,255,255,0)');
-    g.fillStyle = grd; g.fillRect(0,0,128,128);
-    return new THREE.CanvasTexture(c);
-  })();
-
-  /* --- 1. dust field --- */
-  const COUNT = isSmall() ? 620 : 1500;
-  const pos = new Float32Array(COUNT*3);
-  const scl = new Float32Array(COUNT);
-  const sed = new Float32Array(COUNT);
-  for(let i=0;i<COUNT;i++){
-    const r  = 14 + Math.random()*44;
-    const th = Math.random()*Math.PI*2;
-    const ph = Math.acos(2*Math.random()-1);
-    pos[i*3]   = r*Math.sin(ph)*Math.cos(th);
-    pos[i*3+1] = r*Math.sin(ph)*Math.sin(th)*0.62;
-    pos[i*3+2] = r*Math.cos(ph);
-    scl[i] = 0.5 + Math.random()*1.9;
-    sed[i] = Math.random();
-  }
-  const dustGeo = new THREE.BufferGeometry();
-  dustGeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
-  dustGeo.setAttribute('aScale',   new THREE.BufferAttribute(scl,1));
-  dustGeo.setAttribute('aSeed',    new THREE.BufferAttribute(sed,1));
-  const dustMat = new THREE.ShaderMaterial({
-    uniforms:{
-      uTime:{value:0},
-      uPix:{value:renderer.getPixelRatio()},
-      uColor:{value:new THREE.Color('#8fb6d8')}
-    },
-    transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
-    vertexShader:[
-      'attribute float aScale;',
-      'attribute float aSeed;',
-      'uniform float uTime;',
-      'uniform float uPix;',
-      'varying float vA;',
-      'void main(){',
-      '  vec3 p = position;',
-      '  float t = uTime*0.14 + aSeed*6.2831;',
-      '  p.x += sin(t)*0.5; p.y += cos(t*0.85)*0.5; p.z += sin(t*0.6)*0.4;',
-      '  vec4 mv = modelViewMatrix*vec4(p,1.0);',
-      '  gl_Position = projectionMatrix*mv;',
-      '  gl_PointSize = aScale*uPix*(52.0/max(-mv.z,0.001));',
-      '  vA = smoothstep(96.0,14.0,-mv.z)*(0.35+0.65*abs(sin(t*0.7)));',
-      '}'
-    ].join('\n'),
-    fragmentShader:[
-      'uniform vec3 uColor;',
-      'varying float vA;',
-      'void main(){',
-      '  float d = length(gl_PointCoord-0.5);',
-      '  float a = smoothstep(0.5,0.0,d);',
-      '  gl_FragColor = vec4(uColor, a*vA*0.7);',
-      '}'
-    ].join('\n')
-  });
-  world.add(new THREE.Points(dustGeo, dustMat));
-
-  /* --- 2. core: wireframe icosa + fresnel shell --- */
-  const coreWire = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(3.9, 2),
-    new THREE.MeshBasicMaterial({color:0x6d8dab, wireframe:true, transparent:true, opacity:0.13})
-  );
-  world.add(coreWire);
-
-  const shellMat = new THREE.ShaderMaterial({
-    uniforms:{ uTime:{value:0}, uColor:{value:new THREE.Color('#22d3ee')}, uOpacity:{value:0.6} },
-    transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
-    vertexShader:[
-      'varying vec3 vN;',
-      'varying vec3 vP;',
-      'void main(){',
-      '  vN = normalize(normalMatrix*normal);',
-      '  vec4 mv = modelViewMatrix*vec4(position,1.0);',
-      '  vP = mv.xyz;',
-      '  gl_Position = projectionMatrix*mv;',
-      '}'
-    ].join('\n'),
-    fragmentShader:[
-      'uniform vec3 uColor;',
-      'uniform float uTime;',
-      'uniform float uOpacity;',
-      'varying vec3 vN;',
-      'varying vec3 vP;',
-      'void main(){',
-      '  vec3 V = normalize(-vP);',
-      '  float f = pow(1.0 - max(dot(vN,V),0.0), 2.6);',
-      '  float pulse = 0.82 + 0.18*sin(uTime*1.5);',
-      '  gl_FragColor = vec4(uColor*f*pulse*1.7, f*uOpacity);',
-      '}'
-    ].join('\n')
-  });
-  world.add(new THREE.Mesh(new THREE.SphereGeometry(4.5, 48, 48), shellMat));
-
-  /* --- 3. three orbital rings (one per axis) --- */
-  const rings = [
-    {c:0xff7a29, r:7.2, rx:Math.PI/2.4, ry:0.0, sp: 0.0022},
-    {c:0xa78bfa, r:8.4, rx:Math.PI/3.0, ry:1.1, sp:-0.0016},
-    {c:0x34d399, r:9.6, rx:Math.PI/1.9, ry:2.3, sp: 0.0012}
-  ].map(d => {
-    const mesh = new THREE.Mesh(
-      new THREE.RingGeometry(d.r, d.r + 0.035, 160),
-      new THREE.MeshBasicMaterial({color:d.c, side:THREE.DoubleSide, transparent:true,
-        opacity:0.30, blending:THREE.AdditiveBlending, depthWrite:false})
-    );
-    mesh.rotation.set(d.rx, d.ry, 0);
-    mesh.userData.sp = d.sp;
-    world.add(mesh);
-    return mesh;
+  window.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
   });
 
-  /* --- 4. axis nodes --- */
-  const labelHost = $('#labels');
-  const nodes = [
-    {id:'vo2', label:'VO2MAX', color:0xff7a29, pos:new THREE.Vector3( 0.0,  5.4,  0.6)},
-    {id:'slp', label:'SLEEP',  color:0xa78bfa, pos:new THREE.Vector3( 5.0, -3.1, -0.9)},
-    {id:'gut', label:'GUT',    color:0x34d399, pos:new THREE.Vector3(-5.0, -3.1,  1.1)},
-    {id:'xs',  label:'交差点', color:0xf5c542, pos:new THREE.Vector3( 0.0,  0.0,  0.0)}
-  ].map(def => {
-    const g = new THREE.Group();
-    g.position.copy(def.pos);
+  window.addEventListener('scroll', () => { targetScrollY = window.scrollY; });
 
-    const core = new THREE.Mesh(
-      new THREE.SphereGeometry(def.id === 'xs' ? 0.52 : 0.4, 28, 28),
-      new THREE.MeshBasicMaterial({color:def.color})
-    );
-    g.add(core);
-
-    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
-      map:glowTex, color:def.color, transparent:true,
-      blending:THREE.AdditiveBlending, depthWrite:false, opacity:0.85
-    }));
-    sprite.scale.setScalar(def.id === 'xs' ? 4.4 : 3.4);
-    g.add(sprite);
-
-    const el = document.createElement('div');
-    el.className = 'n-label';
-    el.textContent = def.label;
-    el.style.color = '#' + def.color.toString(16).padStart(6,'0');
-    labelHost.appendChild(el);
-
-    g.userData = {id:def.id, core, sprite, el, hoverT:0};
-    world.add(g);
-    return g;
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  /* --- 5. links between nodes + travelling pulses --- */
-  const links = [[0,1],[1,2],[2,0],[0,3],[1,3],[2,3]].map(([a,b]) => {
-    world.add(new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([nodes[a].position, nodes[b].position]),
-      new THREE.LineBasicMaterial({color:0x5f7691, transparent:true, opacity:0.22,
-        blending:THREE.AdditiveBlending, depthWrite:false})
-    ));
-    const pulse = new THREE.Sprite(new THREE.SpriteMaterial({
-      map:glowTex, color:0x9fd8ff, transparent:true,
-      blending:THREE.AdditiveBlending, depthWrite:false, opacity:0.9
-    }));
-    pulse.scale.setScalar(0.85);
-    world.add(pulse);
-    return {a:nodes[a].position, b:nodes[b].position, pulse, off:Math.random()};
-  });
-
-  /* --- interaction --- */
-  const ray = new THREE.Raycaster();
-  const ptr = new THREE.Vector2(-10,-10);
-  const cores = nodes.map(n => n.userData.core);
-  let hovered = null, px = 0, py = 0, tx = 0, ty = 0;
-
-  addEventListener('pointermove', e => {
-    ptr.x =  (e.clientX/innerWidth)*2 - 1;
-    ptr.y = -(e.clientY/innerHeight)*2 + 1;
-    tx = (e.clientX/innerWidth  - 0.5) * 2.4;
-    ty = (e.clientY/innerHeight - 0.5) * 1.5;
-  }, {passive:true});
-
-  addEventListener('click', () => {
-    if(hovered && scrollY < innerHeight * 0.85) setAxisFilter(hovered.userData.id, true);
-  });
-
-  const targetColor = new THREE.Color('#22d3ee');
-  window.__setSceneAxis = ax => targetColor.set(themeFor(ax).color);
-
-  /* brief flare, fired when an archive node is selected */
-  let pulseT = 0;
-  window.__pulseScene = () => { pulseT = 1; };
-
+  // === Animation Loop ===
   const clock = new THREE.Clock();
-  const v = new THREE.Vector3();
+  
+  function animate() {
+    requestAnimationFrame(animate);
+    const time = clock.getElapsedTime();
+    scrollY += (targetScrollY - scrollY) * 0.08;
+    
+    camera.position.x += (mouseX * 2 - camera.position.x) * 0.03;
+    camera.position.y += (mouseY * 1.5 - scrollY * 0.008 - camera.position.y) * 0.03;
+    camera.lookAt(0, -scrollY * 0.008, 0);
 
-  function frame(){
-    requestAnimationFrame(frame);
-    const dt = Math.min(clock.getDelta(), 0.05);
-    const t  = clock.elapsedTime;
-
-    const max    = Math.max(document.body.scrollHeight - innerHeight, 1);
-    const scrollP = Math.min(scrollY / max, 1);
-    const heroP   = Math.min(scrollY / Math.max(innerHeight, 1), 1);
-
-    /* keep the constellation clear of the headline on wide screens */
-    const shift = (innerWidth > 1000 && innerWidth/innerHeight > 1.25) ? 3.6 : 0;
-    world.position.x += (shift - world.position.x) * 0.06;
-
-    /* camera: dolly out + parallax */
-    px += (tx - px) * 0.045;
-    py += (ty - py) * 0.045;
-    camera.position.x = px + Math.sin(t*0.14)*0.35;
-    camera.position.y = -py*0.8 + Math.cos(t*0.11)*0.3;
-    camera.position.z = 20 + heroP*13 + scrollP*7;
-    camera.lookAt(0,0,0);
-
-    if(!REDUCED){
-      world.rotation.y += 0.0016;
-      world.rotation.x  = Math.sin(t*0.12)*0.11 + scrollP*0.35;
-      rings.forEach(r => { r.rotation.z += r.userData.sp; });
-      coreWire.rotation.y -= 0.0008;
-    }
-
-    dustMat.uniforms.uTime.value  = t;
-    shellMat.uniforms.uTime.value = t;
-    shellMat.uniforms.uColor.value.lerp(targetColor, 0.035);
-    pulseT = Math.max(0, pulseT - dt*1.5);
-    shellMat.uniforms.uOpacity.value = (0.6 - heroP*0.32) + pulseT*0.9;
-    coreWire.scale.setScalar(1 + pulseT*0.06);
-
-    links.forEach(l => {
-      const k = (t*0.22 + l.off) % 1;
-      l.pulse.position.lerpVectors(l.a, l.b, k);
-      l.pulse.material.opacity = Math.sin(k*Math.PI) * 0.75 * (1 - heroP*0.8);
-    });
-
-    /* hover test — only while the hero is on screen */
-    if(heroP < 0.9 && FINE){
-      ray.setFromCamera(ptr, camera);
-      const hit = ray.intersectObjects(cores)[0];
-      const nxt = hit ? hit.object.parent : null;
-      if(nxt !== hovered){
-        hovered = nxt;
-        document.body.style.cursor = hovered ? 'pointer' : '';
-      }
-    }else if(hovered){
-      hovered = null;
-      document.body.style.cursor = '';
-    }
-
-    /* node scale + projected HTML labels */
-    const showLabels = heroP < 0.75;
-    nodes.forEach(n => {
-      const u = n.userData;
-      u.hoverT += ((hovered === n ? 1 : 0) - u.hoverT) * Math.min(dt*10, 1);
-      u.core.scale.setScalar(1 + u.hoverT*0.55 + Math.sin(t*1.7 + n.position.x)*0.035);
-      u.sprite.material.opacity = (0.5 + u.hoverT*0.5) * (1 - heroP*0.85);
-
-      v.copy(n.position).applyMatrix4(world.matrixWorld).project(camera);
-      const onScreen = v.z < 1 && showLabels;
-      u.el.classList.toggle('on', onScreen);
-      if(onScreen){
-        u.el.style.left = ((v.x*0.5 + 0.5) * innerWidth) + 'px';
-        u.el.style.top  = ((-v.y*0.5 + 0.5) * innerHeight - (u.id === 'xs' ? 34 : 30)) + 'px';
-      }
-    });
-
-    host.style.opacity = String(1 - heroP*0.78);
+    elements.forEach(el => el.update(time, scrollY, mouseX, mouseY));
     renderer.render(scene, camera);
   }
-  frame();
 
-  addEventListener('resize', () => {
-    camera.aspect = innerWidth/innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
-    renderer.setPixelRatio(Math.min(devicePixelRatio, isSmall() ? 1.5 : 2));
-    dustMat.uniforms.uPix.value = renderer.getPixelRatio();
-  });
-}
-
-/* =========================================================
-   10. BOOT
-   ========================================================= */
-function bindEvents(){
-  document.addEventListener('click', e => {
-    const jump = e.target.closest('[data-jump]');
-    if(jump){
-      const t = $('#' + jump.dataset.jump);
-      if(t) t.scrollIntoView({behavior: REDUCED ? 'auto' : 'smooth', block:'start'});
-      return;
-    }
-
-    const m = e.target.closest('.mcard');
-    if(m){
-      m.classList.add('flash');
-      if(window.__pulseScene) window.__pulseScene();
-      clearTimeout(m._flashT);
-      m._flashT = setTimeout(() => m.classList.remove('flash'), 1700);
-      return;
-    }
-
-    const chip = e.target.closest('#navIn .chip');
-    if(chip && chip.dataset.f){ setAxisFilter(chip.dataset.f, true); return; }
-
-    const pill = e.target.closest('.pill');
-    if(pill){ setSubFilter(pill.dataset.ax, pill.dataset.sub); return; }
-
-    const go = e.target.closest('.axis-btn');
-    if(go){ setAxisFilter(go.dataset.go, true); }
-  });
-
-  let ticking = false;
-  addEventListener('scroll', () => {
-    if(ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const max = Math.max(document.body.scrollHeight - innerHeight, 1);
-      $('#prog').style.width = (scrollY / max * 100) + '%';
-      spy();
-      ticking = false;
+  // === Intersection Observer ===
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
     });
-  }, {passive:true});
-}
+  }, { root: null, rootMargin: '0px', threshold: 0.08 });
 
-function preload(){
-  const bar = $('#preBar'), pct = $('#prePct');
-  let v = 0;
-  const tick = setInterval(() => {
-    v = Math.min(v + 6 + Math.random()*16, 100);
-    bar.style.width = v + '%';
-    pct.textContent = Math.round(v) + '%';
-    if(v >= 100){
-      clearInterval(tick);
+  // === Load ===
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      loader.style.opacity = '0';
       setTimeout(() => {
-        $('#pre').classList.add('done');
-        document.body.classList.add('ready');
-      }, 260);
-    }
-  }, REDUCED ? 40 : 110);
-}
-
-function boot(){
-  initSplit();
-  renderSubRows();
-  renderAllGrids();
-  renderArchive();
-  applyAxisFilter();
-  initVenn();
-  initCursor();
-  bindEvents();
-
-  $$('section.axis, section.archive').forEach(s => {
-    if(REDUCED) s.classList.add('in');
-    else sectionObserver.observe(s);
+        loader.style.display = 'none';
+        
+        mainHeader.classList.remove('hidden');
+        mainHeader.classList.add('show');
+        mainFooter.classList.remove('hidden');
+        mainFooter.classList.add('show');
+        
+        sections.forEach(sec => observer.observe(sec));
+        cards.forEach((card, i) => {
+          card.style.transitionDelay = `${(i % 3) * 0.12}s`;
+          observer.observe(card);
+        });
+        
+        animate();
+      }, 800);
+    }, 1200);
   });
-
-  if(typeof THREE !== 'undefined') initScene();
-  else noWebGL();
-
-  spy();
-  preload();
-}
-
-if(document.readyState === 'loading') addEventListener('DOMContentLoaded', boot);
-else boot();
-</script>
+})();
+  </script>
 </body>
 </html>
